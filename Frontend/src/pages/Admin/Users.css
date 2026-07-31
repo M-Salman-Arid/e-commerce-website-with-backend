@@ -1,0 +1,175 @@
+.users-page {
+
+    width: 100%;
+}
+
+.users-toolbar {
+
+    margin-bottom: 25px;
+}
+
+.users-toolbar input {
+
+    width: 320px;
+
+    max-width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 8px;
+
+    outline: none;
+}
+
+.users-toolbar input:focus {
+
+    border-color: #131921;
+}
+
+.users-table {
+
+    background: white;
+
+    border-radius: 12px;
+
+    overflow-x: auto;
+
+    box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
+}
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+thead {
+
+    background: #131921;
+
+    color: white;
+}
+
+th,
+td {
+
+    padding: 16px;
+
+    text-align: left;
+}
+
+tbody tr {
+
+    border-bottom: 1px solid #eee;
+}
+
+tbody tr:hover {
+
+    background: #f8f8f8;
+}
+
+.role-select {
+
+    padding: 8px 10px;
+
+    border-radius: 6px;
+
+    border: 1px solid #ddd;
+
+    cursor: pointer;
+}
+
+.status {
+
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    color: white;
+
+    font-size: 14px;
+
+    font-weight: bold;
+}
+
+.active {
+
+    background: #2ecc71;
+}
+
+.blocked {
+
+    background: #e74c3c;
+}
+
+.action-buttons {
+
+    display: flex;
+
+    gap: 10px;
+}
+
+.edit-btn,
+.role-btn,
+.delete-btn {
+
+    width: 40px;
+
+    height: 40px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    color: white;
+
+    cursor: pointer;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+.edit-btn {
+
+    background: #3498db;
+}
+
+.edit-btn:hover {
+
+    background: #217dbb;
+}
+
+.role-btn {
+
+    background: #9b59b6;
+}
+
+.role-btn:hover {
+
+    background: #7d3c98;
+}
+
+.delete-btn {
+
+    background: #e74c3c;
+}
+
+.delete-btn:hover {
+
+    background: #c0392b;
+}
+
+@media(max-width:768px) {
+
+    table {
+
+        font-size: 14px;
+    }
+
+}

@@ -1,0 +1,145 @@
+.orders-page {
+
+    width: 100%;
+}
+
+.orders-table {
+
+    background: white;
+
+    border-radius: 12px;
+
+    overflow-x: auto;
+
+    box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
+}
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+thead {
+
+    background: #131921;
+
+    color: white;
+}
+
+th,
+td {
+
+    padding: 16px;
+
+    text-align: left;
+}
+
+tbody tr {
+
+    border-bottom: 1px solid #eee;
+}
+
+tbody tr:hover {
+
+    background: #f8f8f8;
+}
+
+.status-select {
+
+    padding: 8px 12px;
+
+    border-radius: 6px;
+
+    border: none;
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.pending {
+
+    background: #f39c12;
+}
+
+.processing {
+
+    background: #3498db;
+}
+
+.shipped {
+
+    background: #9b59b6;
+}
+
+.delivered {
+
+    background: #2ecc71;
+}
+
+.cancelled {
+
+    background: #e74c3c;
+}
+
+.action-buttons {
+
+    display: flex;
+
+    gap: 10px;
+}
+
+.view-btn,
+.delete-btn {
+
+    width: 40px;
+
+    height: 40px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    color: white;
+
+    cursor: pointer;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+.view-btn {
+
+    background: #3498db;
+}
+
+.view-btn:hover {
+
+    background: #217dbb;
+}
+
+.delete-btn {
+
+    background: #e74c3c;
+}
+
+.delete-btn:hover {
+
+    background: #c0392b;
+}
+
+@media(max-width:768px) {
+
+    table {
+
+        font-size: 14px;
+    }
+
+}

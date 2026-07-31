@@ -1,0 +1,192 @@
+.admin-layout {
+
+    display: flex;
+
+    min-height: 100vh;
+
+    background: #f5f6fa;
+}
+
+/* Sidebar */
+
+.sidebar {
+
+    width: 260px;
+
+    background: #131921;
+
+    color: white;
+
+    display: flex;
+
+    flex-direction: column;
+
+    padding: 25px 0;
+}
+
+.logo {
+
+    text-align: center;
+
+    margin-bottom: 50px;
+
+    font-size: 32px;
+
+    color: #febd69;
+}
+
+.sidebar nav {
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+.sidebar nav a {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    color: white;
+
+    text-decoration: none;
+
+    padding: 16px 25px;
+
+    transition: .3s;
+}
+
+.sidebar nav a:hover {
+
+    background: #1f2b38;
+}
+
+.sidebar nav a.active {
+
+    background: #febd69;
+
+    color: #131921;
+
+    font-weight: bold;
+}
+
+.logout-btn {
+
+    margin: 20px;
+
+    padding: 14px;
+
+    border: none;
+
+    background: #e53935;
+
+    color: white;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.logout-btn:hover {
+
+    background: #c62828;
+}
+
+/* Main */
+
+.admin-main {
+
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+/* Topbar */
+
+.topbar {
+
+    height: 70px;
+
+    background: white;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 0 35px;
+
+    box-shadow: 0 3px 10px rgba(0, 0, 0, .08);
+}
+
+.topbar-right {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 25px;
+}
+
+.top-icon {
+
+    font-size: 20px;
+
+    cursor: pointer;
+}
+
+.admin-user {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+/* Content */
+
+.admin-content {
+
+    padding: 30px;
+}
+
+/* Responsive */
+
+@media(max-width:768px) {
+
+    .sidebar {
+
+        width: 80px;
+    }
+
+    .sidebar span {
+
+        display: none;
+    }
+
+    .logo {
+
+        font-size: 20px;
+    }
+
+    .topbar {
+
+        padding: 0 20px;
+    }
+
+}
