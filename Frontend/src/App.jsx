@@ -12,14 +12,14 @@ import VerifyOTP from "./pages/Auth/verifyOTP";
 import AdminLayout from "./components/Admin/AdminLayout";
 
 // Admin Pages
-import Dashboard from "./pages/Admin/Dashboard";
-import Products from "./pages/Admin/Products";
-import AddProduct from "./pages/Admin/AddProduct";
+import Dashboard from "./pages/Admin/Dashboard/Dashboard";
+import Products from "./pages/Admin/Products/Products";
+import AddProduct from "./pages/Admin/AddProducts/AddProduct";
 import EditProduct from "./pages/Admin/EditProduct";
-import Categories from "./pages/Admin/Categories";
-import Orders from "./pages/Admin/Orders";
-import Users from "./pages/Admin/Users";
-import Profile from "./pages/Admin/Profile";
+import Categories from "./pages/Admin/Categories/Categories";
+import Orders from "./pages/Admin/Orders/Orders";
+import Users from "./pages/Admin/Users/Users";
+import Profile from "./pages/Admin/Profile/Profile";
 
 // routes
 

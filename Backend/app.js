@@ -4,6 +4,8 @@ const cors = require("cors")
 const morgan = require("morgan")
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
+const productRoutes = require("./routes/productRoutes");
 
 const app = express()
 
@@ -15,5 +17,7 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use("/api/auth", authRoutes)
 app.use("/api", userRoutes)
+app.use("/api", categoryRoutes)
+app.use("/api", productRoutes)
 
 module.exports = app

@@ -1,5 +1,8 @@
 const { pool } = require("../config/db.js");
 
+
+// profile page models
+
 const getUserData = async (email) => {
 
     const [rows] = await pool.query(
@@ -56,8 +59,53 @@ const updatePassword = async (email, newPassword) => {
 
 };
 
+
+// user page models 
+
+const allUsers = async (loggedInUserId) => {
+
+    const [rows] = await pool.query(
+        `
+        SELECT 
+        id, name, email, role, status
+        FROM users
+        WHERE id != ?
+        `,
+        [loggedInUserId]
+    )
+
+    return rows
+}
+
+const updateUser = async (role, status, id) => {
+
+    const [result] = await pool.query(
+        `UPDATE users
+         SET role = ?, status = ?
+         WHERE id = ?`,
+        [role, status, id]
+    );
+
+    return result;
+};
+
+const deleteUser = async (id) => {
+
+    const [result] = await pool.query(
+        `DELETE FROM users
+         WHERE id = ?`,
+        [id]
+    );
+    return result;
+};
+
+
+
 module.exports = {
     getUserData,
     updateProfileInDatabase,
-    updatePassword
+    updatePassword,
+    allUsers,
+    updateUser,
+    deleteUser
 };

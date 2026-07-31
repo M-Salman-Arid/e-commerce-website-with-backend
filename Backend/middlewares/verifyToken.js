@@ -25,7 +25,7 @@ const verifyToken = (req, res, next) => {
 
         return res.status(401).json({
             success: false,
-            message: "Invalid Token"
+            message: "Seccion Expired. Please login again"
         });
 
     }

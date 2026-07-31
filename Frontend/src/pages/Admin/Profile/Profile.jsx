@@ -1,13 +1,12 @@
 import "./Profile.css";
 import { useEffect, useState } from "react";
-import { getProfileAPI, updateProfileAPI, changePasswordAPI} from "../../api/authAPI";
+import { getProfileAPI, updateProfileAPI, changePasswordAPI} from "../../../api/userAPI";
 
 const Profile = () => {
 
     const [image, setImage] = useState(null);
 
     const [profile, setProfile] = useState({
-
         name: "",
         email: "",
         phone: ""
@@ -27,7 +26,6 @@ const Profile = () => {
                 const data = await getProfileAPI();
 
                 setProfile({
-
                     name: data.user.name,
                     email: data.user.email,
                     phone: data.user.phone || ""
@@ -119,6 +117,11 @@ const Profile = () => {
     const handlePasswordSubmit = async (e) => {
 
         e.preventDefault();
+
+        if(passwordData.newPassword !== passwordData.confirmPassword) {
+            alert("New password and confirm Password do not match.")
+            return
+        }
 
         try {
 

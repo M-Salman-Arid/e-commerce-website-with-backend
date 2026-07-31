@@ -15,18 +15,3 @@ export const loginUser = async (credentials) => {
     return response.data;
 };
 
-export const getProfileAPI = async () => {
-    const response = await axiosInstance.get("/profile");
-    return response.data;
-};
-
-export const updateProfileAPI = async (profileData) => {
-    const response = await axiosInstance.put("/profile", profileData);
-    return response.data;
-}
-
-export const changePasswordAPI = async (data) => {
-    const response = await axiosInstance.put("/profile/change-password",data);
-    return response.data;
-
-};
