@@ -15,7 +15,6 @@ import AdminLayout from "./components/Admin/AdminLayout";
 import Dashboard from "./pages/Admin/Dashboard/Dashboard";
 import Products from "./pages/Admin/Products/Products";
 import AddProduct from "./pages/Admin/AddProducts/AddProduct";
-import EditProduct from "./pages/Admin/EditProduct";
 import Categories from "./pages/Admin/Categories/Categories";
 import Orders from "./pages/Admin/Orders/Orders";
 import Users from "./pages/Admin/Users/Users";
@@ -58,7 +57,6 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="products" element={<Products />} />
             <Route path="add-product" element={<AddProduct />} />
-            <Route path="edit-product/:id" element={<EditProduct />} />
             <Route path="categories" element={<Categories />} />
             <Route path="orders" element={<Orders />} />
             <Route path="users" element={<Users />} />

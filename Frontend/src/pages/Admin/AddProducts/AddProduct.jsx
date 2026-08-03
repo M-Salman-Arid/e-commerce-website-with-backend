@@ -1,11 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./AddProduct.css";
+import { addProductAPI, getCategories } from "../../../api/productAPI";
 
 const AddProduct = () => {
+
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        fetchCategories();
+    }, []);
+
+    const fetchCategories = async () => {
+        try {
+            const data = await getCategories();
+            setCategories(data.categories);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     const [product, setProduct] = useState({
         title: "",
         description: "",
-        category: "",
+        category_id: "",
         price: "",
         stock: "",
         brand: "",
@@ -30,13 +47,38 @@ const AddProduct = () => {
         setPreview(URL.createObjectURL(file));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        console.log(product);
-        console.log(image);
+        const formData = new FormData();
+        formData.append("title", product.title);
+        formData.append("description", product.description);
+        formData.append("category_id", product.category_id);
+        formData.append("price", product.price);
+        formData.append("stock", product.stock);
+        formData.append("brand", product.brand);
 
-        // Backend API Later
+        if (image) {
+            formData.append("image", image);
+        }
+
+        try {
+            const response = await addProductAPI(formData);
+            console.log("Product added successfully:", response.data);
+            // Reset form fields
+            setProduct({
+                title: "",
+                description: "",
+                category_id: "",
+                price: "",
+                stock: "",
+                brand: "",
+            });
+            setImage(null);
+            setPreview(null);
+        } catch (error) {
+            console.error("Error adding product:", error);
+        }
     };
 
     return (
@@ -70,16 +112,20 @@ const AddProduct = () => {
                         <label>Category</label>
 
                         <select
-                            name="category"
-                            value={product.category}
+                            name="category_id"
+                            value={product.category_id}
                             onChange={handleChange}
                         >
                             <option value="">Select Category</option>
-                            <option>Electronics</option>
-                            <option>Fashion</option>
-                            <option>Furniture</option>
-                            <option>Sports</option>
-                            <option>Books</option>
+
+                            {categories.map((category) => (
+                                <option
+                                    key={category.id}
+                                    value={category.id}
+                                >
+                                    {category.name}
+                                </option>
+                            ))}
                         </select>
                     </div>
 

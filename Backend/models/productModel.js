@@ -1,11 +1,13 @@
-const {pool} = require('../config/dbConfig');
+const { pool } = require("../config/db");
 
 const getProducts = async () => {
     const [rows] = await pool.query(
-        `SELECT 
-        id, name, description, price, stock , category_id
-        FROM products
-        ORDER BY id ASC`
+        `SELECT
+        p.*,
+        c.name AS category_name
+        FROM products p
+        JOIN categories c
+        ON p.category_id = c.id`
     );
     return rows;
 };
@@ -13,7 +15,7 @@ const getProducts = async () => {
 const getProductById = async (id) => {
     const [rows] = await pool.query(
         `SELECT 
-        id, name, description, price, stock , category_id
+        id, title, description, price, stock , category_id
         FROM products
         WHERE id = ?
         ORDER BY id ASC`,
@@ -23,22 +25,22 @@ const getProductById = async (id) => {
 };
 
 const addProduct = async (product) => {
-    const { name, description, price, stock, category_id } = product;
+    const { title, description, price, stock, category_id } = product;
 
     const [result] = await pool.query(
-        `INSERT INTO products (name, description, price, stock, category_id) VALUES (?, ?, ?, ?, ?)`,
-        [name, description, price, stock, category_id]
+        `INSERT INTO products (title, description, price, stock, category_id) VALUES (?, ?, ?, ?, ?)`,
+        [title, description, price, stock, category_id]
     );
 
     return result;
 };
 
 const updateProduct = async (id, product) => {
-    const { name, description, price, stock, category_id } = product;
+    const { title, description, price, stock, category_id } = product;
 
     const [result] = await pool.query(
         `UPDATE products SET name = ?, description = ?, price = ?, stock = ?, category_id = ? WHERE id = ?`,
-        [name, description, price, stock, category_id, id]
+        [title, description, price, stock, category_id, id]
     );
 
     return result;

@@ -1,7 +1,8 @@
 
-const {productModel} = require('../models/productModel');
+const productModel = require('../models/productModel');
 
 const getProducts = async (req, res) => {
+
     try {
         const products = await productModel.getProducts();
 
@@ -52,17 +53,18 @@ const getProductById = async (req, res) => {
 
 const addProduct = async (req, res) => {
     try {
-        const { name, description, price, stock, category_id } = req.body;
+        const { title, description, price, stock, category_id } = req.body;
+        console.log("Request body:", req.body); // Log the request body for debugging
 
-        if (!name || !price || !stock || !category_id) {
+        if (!title || !price || !stock || !category_id) {
             return res.status(400).json({
                 success: false,
-                message: "Name, price, stock, and category_id are required"
+                message: "Title, price, stock, and category_id are required"
             });
         }
 
         const newProduct = await productModel.addProduct({
-            name: name.trim(),
+            title: title.trim(),
             description: description ? description.trim() : null,
             price: parseFloat(price),
             stock: parseInt(stock),
@@ -86,10 +88,10 @@ const addProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, description, price, stock, category_id } = req.body;
+        const { title, description, price, stock, category_id } = req.body;
 
         const updatedProduct = await productModel.updateProduct(id, {
-            name: name ? name.trim() : undefined,
+            name: title ? title.trim() : undefined,
             description: description ? description.trim() : undefined,
             price: price !== undefined ? parseFloat(price) : undefined,
             stock: stock !== undefined ? parseInt(stock) : undefined,

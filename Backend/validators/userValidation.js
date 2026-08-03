@@ -4,17 +4,17 @@ const {body, validationResult} = require('express-validator');
 const validateProfileUpdate = [
 
     body("name")
+        .optional({ checkFalsy: true })
         .trim()
-        .isEmpty()
-        .withMessage("Name is required")
-        .isLength({min : 3, max: 50})
+        .isLength({ min: 3, max: 50 })
         .withMessage("Name must be between 3 and 50 characters"),
 
     body("phone")
-    .trim()
-    .notEmpty()
-    .withMessage("Phone Is required")
-    
+        .optional({ checkFalsy: true })
+        .trim()
+        .isLength({ min: 10, max: 15 })
+        .withMessage("Phone must be between 10 and 15 characters")
+
 ]
 
 

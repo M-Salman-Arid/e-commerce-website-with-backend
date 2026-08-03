@@ -37,17 +37,17 @@ export const getProductById = async (id) => {
     return response.data;
 }
 
-export const addProduct = async (product) => {
+export const addProductAPI = async (product) => {
     const response = await axiosInstance.post("/products/add", product);
     return response.data;
 }
 
-export const updateProduct = async (id, product) => {
+export const updateProductAPI = async (id, product) => {
     const response = await axiosInstance.put(`/products/edit/${id}`, product);
     return response.data;
 }
 
-export const deleteProduct = async (id) => {
+export const deleteProductAPI = async (id) => {
     const response = await axiosInstance.delete(`/products/delete/${id}`);
     return response.data;
 }

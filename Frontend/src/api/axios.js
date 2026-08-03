@@ -35,7 +35,10 @@ axiosInstance.interceptors.response.use(
 
     (error) => {
 
-        if (error.response?.status === 401) {
+        const isAuthRequest = error.config?.url?.includes("/auth/");
+        const hasToken = Boolean(localStorage.getItem("token"));
+
+        if (error.response?.status === 401 && !isAuthRequest && hasToken) {
 
             alert("Your session has expired. Please login again.");
 

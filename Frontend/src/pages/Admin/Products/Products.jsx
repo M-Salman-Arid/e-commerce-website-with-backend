@@ -1,35 +1,55 @@
+import { useEffect, useState } from "react";
 import "./Products.css";
 import { Link } from "react-router-dom";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
-
-const products = [
-    {
-        id: 1,
-        image: "https://picsum.photos/80?1",
-        name: "MacBook Pro",
-        category: "Electronics",
-        price: "$1499",
-        stock: 15,
-    },
-    {
-        id: 2,
-        image: "https://picsum.photos/80?2",
-        name: "Gaming Keyboard",
-        category: "Accessories",
-        price: "$120",
-        stock: 42,
-    },
-    {
-        id: 3,
-        image: "https://picsum.photos/80?3",
-        name: "Smart Watch",
-        category: "Electronics",
-        price: "$299",
-        stock: 18,
-    },
-];
+import { getProducts, getCategories } from "../../../api/productAPI";
+import EditProductModal from "../../../components/EditModels/EditProduct";
+import DeleteProductModal from "../../../components/EditModels/DeleteProduct";
 
 const Products = () => {
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const [categories, setCategories] = useState([]);
+
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [showEditModal, setShowEditModal] = useState(false);
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    const fetchProducts = async () => {
+        try {
+            const data = await getProducts();
+            setProducts(data.products);
+        } catch (error) {
+            console.error("Error fetching products:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchCategories = async () => {
+        try {
+            const data = await getCategories();
+            setCategories(data.categories);
+        } catch (error) {
+            console.error(error);
+        }
+        finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchProducts();
+        fetchCategories();
+    }, []);
+
+    if (loading) {
+        return <p>Loading products...</p>;
+    }
+
+
     return (
         <div className="products-page">
 
@@ -55,7 +75,6 @@ const Products = () => {
                 <table>
 
                     <thead>
-
                         <tr>
                             <th>Image</th>
                             <th>Name</th>
@@ -64,71 +83,95 @@ const Products = () => {
                             <th>Stock</th>
                             <th>Actions</th>
                         </tr>
-
                     </thead>
 
                     <tbody>
 
-                        {products.map((product) => (
+                        {products.length > 0 ? (
+                            products.map((product) => (
+                                <tr key={product.id}>
 
-                            <tr key={product.id}>
+                                    <td>
+                                        <img
+                                            src={`http://localhost:4000/uploads/${product.image}`}
+                                            alt={product.title}
+                                            className="product-img"
+                                        />
+                                    </td>
 
-                                <td>
-                                    <img
-                                        src={product.image}
-                                        alt={product.name}
-                                        className="product-img"
-                                    />
-                                </td>
+                                    <td>{product.title}</td>
 
-                                <td>{product.name}</td>
+                                    <td>{product.category_name}</td>
 
-                                <td>{product.category}</td>
+                                    <td>Rs. {product.price}</td>
 
-                                <td>{product.price}</td>
-
-                                <td>
-
-                                    <span
-                                        className={
-                                            product.stock > 10
-                                                ? "stock in-stock"
-                                                : "stock low-stock"
-                                        }
-                                    >
-                                        {product.stock}
-                                    </span>
-
-                                </td>
-
-                                <td>
-
-                                    <div className="action-buttons">
-
-                                        <Link
-                                            to={`/admin/edit-product/${product.id}`}
-                                            className="edit-btn"
+                                    <td>
+                                        <span
+                                            className={
+                                                product.stock > 10
+                                                    ? "stock in-stock"
+                                                    : "stock low-stock"
+                                            }
                                         >
-                                            <FaEdit />
-                                        </Link>
+                                            {product.stock}
+                                        </span>
+                                    </td>
 
-                                        <button className="delete-btn">
-                                            <FaTrash />
-                                        </button>
+                                    <td>
+                                        <div className="action-buttons">
 
-                                    </div>
+                                            <button
+                                                className="edit-btn"
+                                                onClick={() => {
+                                                    setSelectedProduct(product);
+                                                    setShowEditModal(true);
+                                                }}
+                                            >
+                                                <FaEdit />
+                                            </button>
 
+                                            <button
+                                                className="delete-btn"
+                                                onClick={() => {
+                                                    setSelectedProduct(product);
+                                                    setShowDeleteModal(true);
+                                                }}
+                                            >
+                                                <FaTrash />
+                                            </button>
+
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="6" style={{ textAlign: "center" }}>
+                                    No products found.
                                 </td>
-
                             </tr>
-
-                        ))}
+                        )}
 
                     </tbody>
 
                 </table>
 
             </div>
+            <EditProductModal
+                isOpen={showEditModal}
+                onClose={() => setShowEditModal(false)}
+                product={selectedProduct}
+                categories={categories}
+                onUpdate={fetchProducts}
+
+            />
+            <DeleteProductModal
+                isOpen={showDeleteModal}
+                onClose={() => setShowDeleteModal(false)}
+                product={selectedProduct}
+                onDelete={fetchProducts}
+            />
 
         </div>
     );

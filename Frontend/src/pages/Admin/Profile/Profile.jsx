@@ -4,6 +4,8 @@ import { getProfileAPI, updateProfileAPI, changePasswordAPI} from "../../../api/
 
 const Profile = () => {
 
+    const defaultProfileImage = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+
     const [image, setImage] = useState(null);
 
     const [profile, setProfile] = useState({
@@ -13,40 +15,44 @@ const Profile = () => {
 
     });
 
-    const [preview, setPreview] = useState(
-        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-    );
+    const [preview, setPreview] = useState(defaultProfileImage);
+
+    const fetchProfile = async () => {
+
+        try {
+
+            const data = await getProfileAPI();
+
+            setProfile({
+                name: data.user.name,
+                email: data.user.email,
+                phone: data.user.phone || ""
+
+            });
+
+            if (data.user.profile_image) {
+                setPreview(
+                    `data:image/jpeg;base64,${data.user.profile_image}`
+                );
+            } else {
+                setPreview(defaultProfileImage);
+            }
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    };
 
     useEffect(() => {
 
-        const fetchProfile = async () => {
-
-            try {
-
-                const data = await getProfileAPI();
-
-                setProfile({
-                    name: data.user.name,
-                    email: data.user.email,
-                    phone: data.user.phone || ""
-
-                });
-
-                if (data.user.profile_image) {
-                    setPreview(
-                        `data:image/jpeg;base64,${data.user.profile_image}`
-                    );
-                }
-
-            } catch (error) {
-
-                console.log(error);
-
-            }
-
+        const loadProfile = async () => {
+            await fetchProfile();
         };
 
-        fetchProfile();
+        loadProfile();
 
     }, []);
 
@@ -83,10 +89,14 @@ const Profile = () => {
                 formData.append("profileImage", image);
             }
 
+            console.log("Form Data:", formData);
+
             const response = await updateProfileAPI(formData);
 
             if (response.success) {
                 alert("Profile updated successfully!");
+                await fetchProfile();
+                setImage(null);
             } else {
                 alert("Failed to update profile.");
             }

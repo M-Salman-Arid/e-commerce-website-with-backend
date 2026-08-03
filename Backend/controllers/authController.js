@@ -147,6 +147,15 @@ const login = async (req, res) => {
             });
 
         }
+
+        if (user.status !== "active") {
+
+            return res.status(403).json({
+                success: false,
+                message: "Your account is Blocked. Please contact support."
+            });
+        }
+
         const isPasswordMatched = await bcrypt.compare(
             password,
             user.password

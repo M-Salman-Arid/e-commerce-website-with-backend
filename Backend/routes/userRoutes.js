@@ -10,8 +10,8 @@ const router = express.Router();
 
 // profile routes and uses of controller
 router.get("/profile", verifyToken, getProfile);
-router.put("/profile",verifyToken, validateProfileUpdate ,validate, upload.single("profileImage"), updateProfile);
-router.put("/profile/change-password", verifyToken,validatePasswordChange, validate, changePassword);
+router.put("/profile", verifyToken, upload.single("profileImage"), validateProfileUpdate, validate, updateProfile);
+router.put("/profile/change-password", verifyToken, validatePasswordChange, validate, changePassword);
 
 // user routes for admin only to control and use of controller
 
