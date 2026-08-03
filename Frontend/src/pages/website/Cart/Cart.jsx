@@ -3,7 +3,7 @@ import { FaTrash } from "react-icons/fa";
 
 const Cart = () => {
 
-    // Dummy data (replace with API later)
+    
     const cartItems = [
         {
             id: 1,
@@ -17,7 +17,7 @@ const Cart = () => {
             name: "Gaming Keyboard",
             price: 4500,
             quantity: 2,
-            image: "http://localhost:4000/api/products/image/2",
+            image: "http://localhost:3000/api/products/image/2",
         },
     ];
 
