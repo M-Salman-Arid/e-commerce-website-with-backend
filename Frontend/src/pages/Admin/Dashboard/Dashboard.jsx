@@ -6,7 +6,32 @@ import {
     FaDollarSign,
 } from "react-icons/fa";
 
+import { useEffect, useState } from "react";
+import { getDashboardData } from "../../../api/dashboardAPI";
+
 const Dashboard = () => {
+    
+    const [products, setProducts] = useState(0);
+    const [users, setUsers] = useState(0);
+
+
+    useEffect(() => {
+        
+        const fetchDashboardData = async () => {
+            try {
+                const response = await getDashboardData();
+                setProducts(response.products);
+                setUsers(response.users);
+            }
+            catch (error) {
+                console.error("Error fetching dashboard data:", error);
+            }
+        };
+
+        fetchDashboardData();
+
+    }, []);
+
     return (
         <div className="dashboard">
 
@@ -26,7 +51,7 @@ const Dashboard = () => {
                     </div>
 
                     <div>
-                        <h2>120</h2>
+                        <h2>{products}</h2>
                         <p>Total Products</p>
                     </div>
 
@@ -39,7 +64,7 @@ const Dashboard = () => {
                     </div>
 
                     <div>
-                        <h2>350</h2>
+                        <h2>{users}</h2>
                         <p>Total Users</p>
                     </div>
 
@@ -52,7 +77,7 @@ const Dashboard = () => {
                     </div>
 
                     <div>
-                        <h2>85</h2>
+                        <h2>454</h2>
                         <p>Total Orders</p>
                     </div>
 
@@ -65,7 +90,7 @@ const Dashboard = () => {
                     </div>
 
                     <div>
-                        <h2>$12,450</h2>
+                        <h2>$45,454</h2>
                         <p>Total Revenue</p>
                     </div>
 

@@ -53,13 +53,14 @@ const getProductById = async (req, res) => {
 
 const addProduct = async (req, res) => {
     try {
-        const { title, description, price, stock, category_id } = req.body;
-        console.log("Request body:", req.body); // Log the request body for debugging
+        const { title, description, price, stock, category_id, brand } = req.body;
 
-        if (!title || !price || !stock || !category_id) {
+        const image = req.file.buffer;
+
+        if (!title || !price || !stock || !category_id || !brand) {
             return res.status(400).json({
                 success: false,
-                message: "Title, price, stock, and category_id are required"
+                message: "Title, price, stock, category_id, and brand are required"
             });
         }
 
@@ -68,7 +69,9 @@ const addProduct = async (req, res) => {
             description: description ? description.trim() : null,
             price: parseFloat(price),
             stock: parseInt(stock),
-            category_id: parseInt(category_id)
+            category_id: parseInt(category_id),
+            brand: brand.trim(),
+            image: image    
         });
 
         return res.status(201).json({
@@ -88,14 +91,15 @@ const addProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, description, price, stock, category_id } = req.body;
+        const { title, description, price, stock, category_id, brand } = req.body;
 
         const updatedProduct = await productModel.updateProduct(id, {
-            name: title ? title.trim() : undefined,
+            title: title ? title.trim() : undefined,
             description: description ? description.trim() : undefined,
             price: price !== undefined ? parseFloat(price) : undefined,
             stock: stock !== undefined ? parseInt(stock) : undefined,
-            category_id: category_id !== undefined ? parseInt(category_id) : undefined
+            category_id: category_id !== undefined ? parseInt(category_id) : undefined,
+            brand: brand !== undefined ? brand.trim() : undefined
         });
 
         if (!updatedProduct) {
@@ -145,9 +149,31 @@ const deleteProduct = async (req, res) => {
 };
 
 
+const getProductImage = async (req, res) => {
+    
+    try {
+        const { id } = req.params;
+
+        const imageData = await productModel.getProductImage(id);
+
+        if (imageData.length === 0 || !imageData[0].image) {
+            return res.status(404).send("Image not found");
+        }
+
+        res.setHeader("Content-Type", "image/jpeg"); // or use the stored MIME type
+        res.send(imageData[0].image);
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Server Error" });
+    }
+};
+
+
 
 module.exports = {
     getProducts,
+    getProductImage,
     getProductById,
     addProduct,
     updateProduct,

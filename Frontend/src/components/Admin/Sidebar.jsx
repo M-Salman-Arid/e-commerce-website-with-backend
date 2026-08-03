@@ -33,7 +33,7 @@ const Sidebar = () => {
                     <span>Dashboard</span>
                 </NavLink>
 
-                <NavLink to="/admin/products">
+                <NavLink to="/admin/admin-products">
                     <FaBoxOpen />
                     <span>Products</span>
                 </NavLink>

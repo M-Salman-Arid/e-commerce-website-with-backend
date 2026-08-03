@@ -1,19 +1,26 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // Customer Pages
-import Home from "./pages/Home";
+import Home from "./pages/website/Home/Home";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
 import ResetPassword from "./pages/Auth/ResetPassword";
 import VerifyOTP from "./pages/Auth/verifyOTP";
 
+// website Pages
+import Products from "./pages/website/Products/Products";
+import ProductDetails from "./pages/website/ProductDetails/ProductDetails"
+import Cart from "./pages/website/Cart/Cart";
+import Checkout from "./pages/website/Checkout/Checkout";
+// import OrderSuccess from "./pages/website/OrderSuccess/OrderSuccess";
+
 // Admin Layout
 import AdminLayout from "./components/Admin/AdminLayout";
 
 // Admin Pages
 import Dashboard from "./pages/Admin/Dashboard/Dashboard";
-import Products from "./pages/Admin/Products/Products";
+import AdminProducts from "./pages/Admin/Products/Products";
 import AddProduct from "./pages/Admin/AddProducts/AddProduct";
 import Categories from "./pages/Admin/Categories/Categories";
 import Orders from "./pages/Admin/Orders/Orders";
@@ -32,6 +39,8 @@ function App() {
       <Routes>
 
         <Route path="/" element={<Home />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
 
         <Route element={<PublicRoute />}>
 
@@ -40,12 +49,13 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/verify-otp" element={<VerifyOTP />} />
-
         </Route>
 
         <Route element={<ProtectedRoute />}>
 
           <Route path="/profile" element={<Profile />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
 
         </Route>
 
@@ -55,7 +65,7 @@ function App() {
           <Route path="/admin" element={<AdminLayout />}>
           
             <Route index element={<Dashboard />} />
-            <Route path="products" element={<Products />} />
+            <Route path="admin-products" element={<AdminProducts />} />
             <Route path="add-product" element={<AddProduct />} />
             <Route path="categories" element={<Categories />} />
             <Route path="orders" element={<Orders />} />

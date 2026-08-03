@@ -1,7 +1,7 @@
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 
-import { FaShoppingCart, FaHeart, FaUser, FaSearch } from "react-icons/fa";
+import { FaShoppingCart, FaHeart, FaUser } from "react-icons/fa";
 
 const Navbar = () => {
   const token = localStorage.getItem("token");
@@ -13,17 +13,6 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="logo">
         <Link to="/">ShopEase</Link>
-      </div>
-
-      <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Search products..."
-        />
-
-        <button>
-          <FaSearch />
-        </button>
       </div>
 
       <ul className="nav-links">

@@ -37,10 +37,19 @@ export const getProductById = async (id) => {
     return response.data;
 }
 
-export const addProductAPI = async (product) => {
-    const response = await axiosInstance.post("/products/add", product);
+export const addProductAPI = async (formData) => {
+    const response = await axiosInstance.post(
+        "/products/add",
+        formData,
+        {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        }
+    );
+
     return response.data;
-}
+};
 
 export const updateProductAPI = async (id, product) => {
     const response = await axiosInstance.put(`/products/edit/${id}`, product);

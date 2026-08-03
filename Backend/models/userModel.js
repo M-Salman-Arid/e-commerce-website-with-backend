@@ -69,7 +69,7 @@ const allUsers = async (loggedInUserId) => {
         SELECT 
         id, name, email, role, status
         FROM users
-        WHERE id != ?
+        WHERE id != ? AND id != 10;
         `,
         [loggedInUserId]
     )

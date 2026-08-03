@@ -10,6 +10,8 @@ const Users = () => {
 
     const [users, setUsers] = useState([]);
 
+    const [search, setSearch] = useState("");
+
     const [selectedUser, setSelectedUser] = useState(null);
 
     const [showEditModal, setShowEditModal] = useState(false);
@@ -30,6 +32,10 @@ const Users = () => {
         fetchUsers();
 
     }, []);
+
+    const filteredUsers = users.filter((user) =>
+        user.name.toLowerCase().includes(search.toLowerCase())
+    );
 
     const openEditModal = (user) => {
 
@@ -71,6 +77,8 @@ const Users = () => {
                 <input
                     type="text"
                     placeholder="Search users..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                 />
 
             </div>
@@ -101,7 +109,7 @@ const Users = () => {
 
                     <tbody>
 
-                        {users.map((user) => (
+                        {filteredUsers.map((user) => (
 
                             <tr key={user.id}>
 

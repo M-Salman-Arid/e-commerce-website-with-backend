@@ -93,7 +93,7 @@ const Products = () => {
 
                                     <td>
                                         <img
-                                            src={`http://localhost:4000/uploads/${product.image}`}
+                                            src={`http://localhost:3000/api/products/image/${product.id}`}
                                             alt={product.title}
                                             className="product-img"
                                         />
