@@ -1,7 +1,10 @@
 import axiosInstance from "./axios";
 
-export const addToCartAPI = (productId, quantity) => {
-    return axiosInstance.post("/cart/add", { productId, quantity });
+export const addToCartAPI = (productId, quantity = 1) => {
+    return axiosInstance.post("/cart/add", {
+        product_id: productId,
+        quantity,
+    });
 }
 
 export const getCartItemsAPI = () => {
@@ -9,7 +12,7 @@ export const getCartItemsAPI = () => {
 }
 
 export const updateCartItemAPI = (productId, quantity) => {
-    return axiosInstance.put("/cart/update", { productId, quantity });
+    return axiosInstance.put(`/cart/update/${productId}`, { quantity });
 }
 
 export const removeCartItemAPI = (productId) => {
@@ -18,8 +21,4 @@ export const removeCartItemAPI = (productId) => {
 
 export const clearCartAPI = () => {
     return axiosInstance.delete("/cart/clear");
-}
-
-export const getCartTotalAPI = () => {
-    return axiosInstance.get("/cart/total");
 }

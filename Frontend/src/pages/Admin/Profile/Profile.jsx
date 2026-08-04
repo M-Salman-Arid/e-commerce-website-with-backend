@@ -218,7 +218,7 @@ const Profile = () => {
                         <label>Phone Number</label>
 
                         <input
-                            type="text"
+                            type="number"
                             name="phone"
                             value={profile.phone}
                             onChange={handleChange}

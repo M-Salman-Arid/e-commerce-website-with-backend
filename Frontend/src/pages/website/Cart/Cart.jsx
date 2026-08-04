@@ -1,30 +1,62 @@
 import "./Cart.css";
 import { FaTrash } from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { getCartItemsAPI, updateCartItemAPI, removeCartItemAPI } from "../../../api/cartAPI";
 
 const Cart = () => {
 
-    
-    const cartItems = [
-        {
-            id: 1,
-            name: "Apple MacBook Pro",
-            price: 149999,
-            quantity: 1,
-            image: "http://localhost:3000/api/products/image/1",
-        },
-        {
-            id: 2,
-            name: "Gaming Keyboard",
-            price: 4500,
-            quantity: 2,
-            image: "http://localhost:3000/api/products/image/2",
-        },
-    ];
+    const navigate = useNavigate();
+
+    const [cartItems, setCartItems] = useState([]);
 
     const subtotal = cartItems.reduce(
         (total, item) => total + item.price * item.quantity,
         0
     );
+
+    useEffect(() => {
+        const fetchCartItems = async () => {
+            try {
+                const response = await getCartItemsAPI();
+                setCartItems(response.data.cart ?? []);
+            } catch (error) {
+                console.error("Error fetching cart items:", error);
+            }
+        };
+        fetchCartItems();
+    }, []);
+
+
+    const updateQuantity = async (productId, newQuantity) => {
+
+        try {
+
+            await updateCartItemAPI(productId, newQuantity);
+            setCartItems((prevItems) =>
+                prevItems.map((item) =>
+                    item.id === productId ? { ...item, quantity: newQuantity } : item
+                )
+            );
+        }
+        catch (error) {
+            console.error("Error updating cart item:", error);
+        }
+
+    };
+
+    const removeItem = async (productId) => {
+
+        try {
+            await removeCartItemAPI(productId);
+            setCartItems((prevItems) => prevItems.filter((item) => item.id !== productId));
+        }
+        catch (error) {
+            console.error("Error removing cart item:", error);
+        }
+    };
+
+
 
     return (
         <div className="cart-page">
@@ -42,7 +74,7 @@ const Cart = () => {
                         <div className="cart-item" key={item.id}>
 
                             <img
-                                src={item.image}
+                                src={`http://localhost:3000/api/products/image/${item.product_id}`}
                                 alt={item.name}
                             />
 
@@ -56,17 +88,17 @@ const Cart = () => {
 
                                 <div className="quantity">
 
-                                    <button>-</button>
+                                    <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
 
                                     <span>{item.quantity}</span>
 
-                                    <button>+</button>
+                                    <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
 
                                 </div>
 
                             </div>
 
-                            <button className="delete-btn">
+                            <button className="delete-btn" onClick={() => removeItem(item.id)}>
 
                                 <FaTrash />
 
@@ -101,7 +133,7 @@ const Cart = () => {
                         <span>Rs. {subtotal.toLocaleString()}</span>
                     </div>
 
-                    <button className="checkout-btn">
+                    <button className="checkout-btn" onClick={() => navigate("/checkout")}>
                         Proceed to Checkout
                     </button>
 

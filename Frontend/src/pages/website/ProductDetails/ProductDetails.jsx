@@ -5,6 +5,8 @@ import { getProductById } from "../../../api/productAPI";
 import Navbar from "../../../components/Navbar/Navbar";
 import Footer from "../../../components/Footer/Footer";
 import "./ProductDetails.css";
+import { addToCartAPI } from "../../../api/cartAPI";
+
 
 const ProductDetails = () => {
 
@@ -59,6 +61,17 @@ const ProductDetails = () => {
         );
     }
 
+    const handleAddToCart = async () => {
+        try {
+            await addToCartAPI(product.id, 1);
+            alert("Product added to cart!");
+        }
+        catch (error) {
+            console.error("Error adding product to cart:", error);
+            alert("Failed to add product to cart.");
+        }
+    };
+
     return (
         <>
             <Navbar />
@@ -112,7 +125,7 @@ const ProductDetails = () => {
 
                     <div className="buttons">
 
-                        <button className="cart-btn">
+                        <button className="cart-btn" onClick={handleAddToCart}>
                             <FaCartShopping />
                             Add to Cart
                         </button>

@@ -13,6 +13,8 @@ const Dashboard = () => {
     
     const [products, setProducts] = useState(0);
     const [users, setUsers] = useState(0);
+    const [orders, setOrders] = useState(0);
+    const [revenue, setRevenue] = useState(0);
 
 
     useEffect(() => {
@@ -22,6 +24,8 @@ const Dashboard = () => {
                 const response = await getDashboardData();
                 setProducts(response.products);
                 setUsers(response.users);
+                setOrders(response.orders);
+                setRevenue(response.revenue);
             }
             catch (error) {
                 console.error("Error fetching dashboard data:", error);
@@ -77,7 +81,7 @@ const Dashboard = () => {
                     </div>
 
                     <div>
-                        <h2>454</h2>
+                        <h2>{orders}</h2>
                         <p>Total Orders</p>
                     </div>
 
@@ -90,7 +94,7 @@ const Dashboard = () => {
                     </div>
 
                     <div>
-                        <h2>$45,454</h2>
+                        <h2>Rs. {Number(revenue).toLocaleString()}</h2>
                         <p>Total Revenue</p>
                     </div>
 

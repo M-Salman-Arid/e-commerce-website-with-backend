@@ -1,38 +1,35 @@
 import "./Orders.css";
 import { FaEye, FaTrash } from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { getOrders } from "../../../api/orderAPI";
 
-const orders = [
-    {
-        id: "#1001",
-        customer: "Ali Khan",
-        date: "2026-07-27",
-        amount: "$1499",
-        status: "Pending",
-    },
-    {
-        id: "#1002",
-        customer: "Ahmed",
-        date: "2026-07-26",
-        amount: "$299",
-        status: "Shipped",
-    },
-    {
-        id: "#1003",
-        customer: "Salman",
-        date: "2026-07-25",
-        amount: "$89",
-        status: "Delivered",
-    },
-    {
-        id: "#1004",
-        customer: "Usman",
-        date: "2026-07-24",
-        amount: "$560",
-        status: "Cancelled",
-    },
-];
 
 const Orders = () => {
+
+    const [orders, setOrders] = useState([]);
+
+    useEffect(() => {
+
+        const fetchOrders = async () => {
+
+            try {
+
+                const response = await getOrders();
+
+                setOrders(response);
+
+            } catch (error) {
+
+                console.error("Error fetching orders:", error);
+
+            }
+
+        };
+
+        fetchOrders();
+
+    }, []);
+
     return (
         <div className="orders-page">
 
@@ -76,17 +73,17 @@ const Orders = () => {
 
                                 <td>{order.id}</td>
 
-                                <td>{order.customer}</td>
+                                <td>{order.customer_name    }</td>
 
-                                <td>{order.date}</td>
+                                <td>{new Date(order.created_at).toISOString().split("T")[0]}</td>
 
-                                <td>{order.amount}</td>
+                                <td>{order.total_price}</td>
 
                                 <td>
 
                                     <select
-                                        defaultValue={order.status}
-                                        className={`status-select ${order.status.toLowerCase()}`}
+                                        defaultValue={order.order_status}
+                                        className={`status-select ${order.order_status.toLowerCase()}`}
                                     >
                                         <option>Pending</option>
                                         <option>Processing</option>

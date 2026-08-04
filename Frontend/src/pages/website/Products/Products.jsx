@@ -43,7 +43,7 @@ const Products = () => {
     const filteredProducts = products.filter((product) => {
 
         const matchesSearch =
-            (product.name || "")
+            (product.title || "")
                 .toLowerCase()
                 .includes(search.toLowerCase());
 

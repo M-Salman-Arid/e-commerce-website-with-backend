@@ -1,30 +1,99 @@
 import "./Checkout.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createOrder } from "../../../api/orderAPI";
+import { getProfileAPI } from "../../../api/userAPI";
+import { getCartItemsAPI } from "../../../api/cartAPI";
+
+import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
 
-    const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
+    const navigate = useNavigate();
 
-    // Dummy cart data
-    const cartItems = [
-        {
-            id: 1,
-            name: "Atomic Habits",
-            price: 350,
-            quantity: 2,
-        },
-        {
-            id: 2,
-            name: "Wireless Headphones",
-            price: 2450,
-            quantity: 1,
-        },
-    ];
+    const [profile, setProfile] = useState({
+        name: "",
+        email: "",
+        phone: ""
+    });
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const data = await getProfileAPI();
+
+                setProfile({
+                    name: data.user.name,
+                    email: data.user.email,
+                    phone: data.user.phone || ""
+
+                });
+            } catch (error) {
+                console.error("Error fetching profile:", error);
+            }
+        };
+
+        fetchProfile();
+    }, []);
+
+
+    const [cartItems, setCartItems] = useState([]);
 
     const subtotal = cartItems.reduce(
         (total, item) => total + item.price * item.quantity,
         0
     );
+
+    useEffect(() => {
+        const fetchCartItems = async () => {
+            try {
+                const items = await getCartItemsAPI();
+                setCartItems(items.data.cart ?? []);
+            } catch (error) {
+                console.error("Error fetching cart items:", error);
+            }
+        };
+
+        fetchCartItems();
+    }, []);
+
+    
+    const [shippingInfo, setShippingInfo] = useState({
+        shipping_address: "",
+        city: "",
+        postal_code: ""
+    });
+
+    const handleChange = (e) => {
+        setShippingInfo({
+            ...shippingInfo,
+            [e.target.name]: e.target.value,
+        });
+    };
+    const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
+
+    const handlePlaceOrder = async () => {
+        const orderData = {
+            user_id: profile.id,
+            items: cartItems.map((item) => ({
+                product_id: item.product_id,
+                quantity: item.quantity,
+                price: item.price
+            })),
+            total_amount: subtotal,
+            shipping_address: shippingInfo.shipping_address,
+            city: shippingInfo.city,
+            postal_code: shippingInfo.postal_code,
+            payment_method: paymentMethod
+        };
+
+        try {
+            await createOrder(orderData);
+            alert("Order placed successfully!");
+            navigate("/order-success");
+        } catch (error) {
+            console.error("Error placing order:", error);
+        }
+    };
 
     return (
 
@@ -42,32 +111,49 @@ const Checkout = () => {
 
                     <input
                         type="text"
+                        name="name"
+                        value={profile.name}
                         placeholder="Full Name"
+                        readOnly
                     />
 
                     <input
                         type="email"
-                        placeholder="Email"
+                        name="email"
+                        value={profile.email}
+                        readOnly
                     />
 
                     <input
-                        type="text"
+                        type="number"
+                        name="phone"
+                        value={profile.phone}
                         placeholder="Phone Number"
+                        readOnly
                     />
 
                     <textarea
+                        name="shipping_address"
                         placeholder="Complete Address"
                         rows="4"
+                        onChange={handleChange}
+                        required
                     />
 
                     <input
                         type="text"
+                        name="city"
                         placeholder="City"
+                        onChange={handleChange}
+                        required
                     />
 
                     <input
                         type="text"
+                        name="postal_code"
                         placeholder="Postal Code"
+                        onChange={handleChange}
+                        required
                     />
 
                     <h3>Payment Method</h3>
@@ -112,7 +198,7 @@ const Checkout = () => {
                         >
 
                             <span>
-                                {item.name} × {item.quantity}
+                                {item.title} × {item.quantity}
                             </span>
 
                             <span>
@@ -142,7 +228,7 @@ const Checkout = () => {
                         <strong>Rs. {subtotal.toLocaleString()}</strong>
                     </div>
 
-                    <button className="place-order-btn">
+                    <button className="place-order-btn" onClick={handlePlaceOrder}>
                         Place Order
                     </button>
 

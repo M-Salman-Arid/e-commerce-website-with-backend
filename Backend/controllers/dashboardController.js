@@ -5,10 +5,14 @@ const getDashboardData = async (req, res) => {
     try {
         const productsCount = await dashboardModel.getProductsCount();
         const usersCount = await dashboardModel.getUsersCount();
+        const ordersCount = await dashboardModel.getOrdersCount();
+        const totalRevenue = await dashboardModel.getTotalRevenue();
 
         res.status(200).json({
             products: productsCount,
             users: usersCount,
+            orders: ordersCount,
+            revenue: totalRevenue
         });
 
     } catch (error) {

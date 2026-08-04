@@ -13,7 +13,7 @@ import Products from "./pages/website/Products/Products";
 import ProductDetails from "./pages/website/ProductDetails/ProductDetails"
 import Cart from "./pages/website/Cart/Cart";
 import Checkout from "./pages/website/Checkout/Checkout";
-// import OrderSuccess from "./pages/website/OrderSuccess/OrderSuccess";
+import OrderSuccess from "./pages/website/OrderSuccess/OrderSuccess";
 
 // Admin Layout
 import AdminLayout from "./components/Admin/AdminLayout";
@@ -56,6 +56,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/order-success" element={<OrderSuccess />} />
 
         </Route>
 
