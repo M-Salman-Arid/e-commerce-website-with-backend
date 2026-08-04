@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCartItemsAPI, updateCartItemAPI, removeCartItemAPI } from "../../../api/cartAPI";
 
+import Navbar from "../../../components/Navbar/Navbar";
+import Footer from "../../../components/Footer/Footer";
+
 const Cart = () => {
 
     const navigate = useNavigate();
@@ -59,89 +62,98 @@ const Cart = () => {
 
 
     return (
-        <div className="cart-page">
 
-            <h1>Shopping Cart</h1>
+        <>
+            <Navbar />
 
-            <div className="cart-container">
+            <div className="cart-page">
 
-                {/* Left Side */}
+                <h1>Shopping Cart</h1>
 
-                <div className="cart-items">
+                <div className="cart-container">
 
-                    {cartItems.map((item) => (
+                    {/* Left Side */}
 
-                        <div className="cart-item" key={item.id}>
+                    <div className="cart-items">
 
-                            <img
-                                src={`http://localhost:3000/api/products/image/${item.product_id}`}
-                                alt={item.name}
-                            />
+                        {cartItems.map((item) => (
 
-                            <div className="cart-info">
+                            <div className="cart-item" key={item.id}>
 
-                                <h3>{item.name}</h3>
+                                <img
+                                    src={`http://localhost:3000/api/products/image/${item.product_id}`}
+                                    alt={item.name}
+                                />
 
-                                <p>
-                                    Rs. {item.price.toLocaleString()}
-                                </p>
+                                <div className="cart-info">
 
-                                <div className="quantity">
+                                    <h3>{item.name}</h3>
 
-                                    <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
+                                    <p>
+                                        Rs. {item.price.toLocaleString()}
+                                    </p>
 
-                                    <span>{item.quantity}</span>
+                                    <div className="quantity">
 
-                                    <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
+                                        <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
+
+                                        <span>{item.quantity}</span>
+
+                                        <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
+
+                                    </div>
 
                                 </div>
 
+                                <button className="delete-btn" onClick={() => removeItem(item.id)}>
+
+                                    <FaTrash />
+
+                                </button>
+
                             </div>
 
-                            <button className="delete-btn" onClick={() => removeItem(item.id)}>
+                        ))}
 
-                                <FaTrash />
+                    </div>
 
-                            </button>
+                    {/* Right Side */}
 
+                    <div className="cart-summary">
+
+                        <h2>Order Summary</h2>
+
+                        <div className="summary-row">
+                            <span>Subtotal</span>
+                            <span>Rs. {subtotal.toLocaleString()}</span>
                         </div>
 
-                    ))}
+                        <div className="summary-row">
+                            <span>Shipping</span>
+                            <span>Free</span>
+                        </div>
 
-                </div>
+                        <hr />
 
-                {/* Right Side */}
+                        <div className="summary-row total">
+                            <span>Total</span>
+                            <span>Rs. {subtotal.toLocaleString()}</span>
+                        </div>
 
-                <div className="cart-summary">
+                        <button className="checkout-btn" onClick={() => navigate("/checkout")}>
+                            Proceed to Checkout
+                        </button>
 
-                    <h2>Order Summary</h2>
-
-                    <div className="summary-row">
-                        <span>Subtotal</span>
-                        <span>Rs. {subtotal.toLocaleString()}</span>
                     </div>
-
-                    <div className="summary-row">
-                        <span>Shipping</span>
-                        <span>Free</span>
-                    </div>
-
-                    <hr />
-
-                    <div className="summary-row total">
-                        <span>Total</span>
-                        <span>Rs. {subtotal.toLocaleString()}</span>
-                    </div>
-
-                    <button className="checkout-btn" onClick={() => navigate("/checkout")}>
-                        Proceed to Checkout
-                    </button>
 
                 </div>
 
             </div>
 
-        </div>
+            <Footer />
+
+        </>
+
     );
 };
 

@@ -7,6 +7,10 @@ export const addToCartAPI = (productId, quantity = 1) => {
     });
 }
 
+export const getCartCountAPI = () => {
+    return axiosInstance.get("/cart/count");
+}
+
 export const getCartItemsAPI = () => {
     return axiosInstance.get("/cart");
 }

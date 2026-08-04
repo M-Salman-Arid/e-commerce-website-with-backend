@@ -79,11 +79,48 @@ const verifyUser = async (email) => {
 
 };
 
+const setPasswordResetOTP = async (email, otp, expiry) => {
+
+    const [result] = await pool.query(
+        `UPDATE users
+         SET
+            reset_otp = ?,
+            reset_otp_expiry = ?
+         WHERE email = ?`,
+        [otp, expiry, email]
+    );
+    return result;
+};
+
+const getUserByPasswordResetOTP = async (email, otp) => {
+
+    const [rows] = await pool.query(
+        `SELECT * FROM users
+         WHERE email = ?
+           AND reset_otp = ?`,
+        [email, otp]
+    );
+    return rows[0];
+};
+
+const updatePassword = async (email, hashedPassword) => {
+
+    const [result] = await pool.query(
+        `UPDATE users
+         SET password = ?
+         WHERE email = ?`,
+        [hashedPassword, email]
+    );
+    return result;
+}
+
 
 module.exports = {
     getUserByEmail,
+    setPasswordResetOTP,
+    getUserByPasswordResetOTP,
     getUserByVerificationOTP,
     createUser,
     verifyUser,
-
+    updatePassword
 };

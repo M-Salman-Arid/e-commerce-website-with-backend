@@ -75,7 +75,7 @@ const Home = () => {
     }, []);
 
     if (loading) {
-        return <h2>Loading...</h2>;
+        return <h2>Loading...🤢</h2>;
     }
     return (
         <>
@@ -165,7 +165,7 @@ const Home = () => {
                 <div className="product-grid">
 
                     {products
-                        .slice(0, 3)
+                        .slice(0, 3 )
                         .map((product) => (
 
                             <ProductCard

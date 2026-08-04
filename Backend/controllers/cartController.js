@@ -38,6 +38,26 @@ const addToCart = async (req, res) => {
     }
 };
 
+const cartCount = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const count = await cartModel.getCartCount(userId);
+
+        res.status(200).json({
+            success: true,
+            count
+        });
+    } catch (error) {
+
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
+};
+
 const getCart = async (req, res) => {
     try {
 
@@ -143,8 +163,11 @@ const clearCart = async (req, res) => {
     }
 };
 
+
+
 module.exports = {
     addToCart,
+    cartCount,
     getCart,
     updateCartQuantity,
     removeCartItem,

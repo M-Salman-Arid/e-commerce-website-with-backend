@@ -15,3 +15,17 @@ export const loginUser = async (credentials) => {
     return response.data;
 };
 
+export const forgotPasswordAPI = (email) => {
+    return axiosInstance.post("/auth/forgot-password", { email });
+}
+
+export const verifyPasswordResetOTP = (email, otp) => {
+    return axiosInstance.post("/auth/verify-password-reset-otp", { email, otp });
+}
+
+export const resetPasswordAPI = (data) => {
+    return axiosInstance.post("/auth/reset-password", data);
+}
+
+
+

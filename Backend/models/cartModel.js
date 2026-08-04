@@ -43,6 +43,19 @@ const increaseQuantity = async (cartId, quantity) => {
     return result;
 };
 
+const getCartCount = async (userId) => {
+
+    const [rows] = await pool.query(
+        `
+        SELECT COUNT(*) AS count
+        FROM cart
+        WHERE user_id = ?
+        `,
+        [userId]
+    );
+    return rows[0].count;
+};
+
 
 const getCart = async (userId) => {
 
@@ -110,6 +123,7 @@ module.exports = {
     findCartItem,
     addCartItem,
     increaseQuantity,
+    getCartCount,
     getCart,
     updateQuantity,
     removeCartItem,

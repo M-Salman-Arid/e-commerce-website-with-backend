@@ -1,9 +1,8 @@
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 import { FaShoppingCart, FaHeart, FaUser } from "react-icons/fa";
-
-
 import { useState, useEffect } from "react";
+import { getCartCountAPI } from "../../api/cartAPI";
 
 
 const Navbar = () => {
@@ -13,6 +12,21 @@ const Navbar = () => {
   const isLoggedIn = !!token;
 
   const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    const fetchCartCount = async () => {
+      if (isLoggedIn) {
+        try {
+          const response = await getCartCountAPI();
+          setCartCount(response.data.count);
+        } catch (error) {
+          console.error("Error fetching cart count:", error);
+        }
+      }
+    };
+
+    fetchCartCount();
+  }, [isLoggedIn]);
 
   return (
     <nav className="navbar">
@@ -38,7 +52,7 @@ const Navbar = () => {
         <li className="cart">
           <Link to="/cart">
             <FaShoppingCart />
-            <span className="cart-count">0</span>
+            <span className="cart-count">{cartCount}</span>
           </Link>
         </li>
 
