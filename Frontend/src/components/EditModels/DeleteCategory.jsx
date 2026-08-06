@@ -1,34 +1,29 @@
 import "./DeleteCatagory.css";
 import { deleteCategoryAPI } from "../../api/productAPI";
+import { toast } from "react-toastify";
 
-const DeleteCategoryModal = ({ category, onClose, onCategoryDeleted }) => {
+const DeleteCategoryModal = ({ isOpen, onClose, category, onDelete }) => {
 
     const handleDelete = async () => {
 
-        if (!category) return;
-
         try {
-
-  
-            const response = await deleteCategoryAPI(category.id);
-            if (!response.success) return;
-
-            if (onCategoryDeleted) {
-                onCategoryDeleted(category.id);
-            }
-
-            alert("category deleted!.")
+            await deleteCategoryAPI(category.id);
+            onDelete();
+            toast.success("Category Delected Sucessfuly.");
             onClose();
 
         } catch (error) {
 
             console.log(error);
+            toast.error("Error deleting Category!")
 
         }
 
     };
 
-    if (!category) return null;
+    if(!isOpen || !category) {
+        return null
+    }
 
     return (
 

@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // Customer Pages
 import Home from "./pages/website/Home/Home";
 import Login from "./pages/Auth/Login";
@@ -35,50 +36,55 @@ import AdminRoute from "./components/routes/AdminRoutes";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
 
-        <Route path="/" element={<Home />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
+    <>
+      <ToastContainer position="top-right" autoClose={3000} />
+      <BrowserRouter>
+        <Routes>
 
-        <Route element={<PublicRoute />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
 
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:token" element={<ResetPassword />} />
-          <Route path="/verify-otp" element={<VerifyOTP />} />
-        </Route>
+          <Route element={<PublicRoute />}>
 
-        <Route element={<ProtectedRoute />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/verify-otp" element={<VerifyOTP />} />
+          </Route>
 
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/order-success" element={<OrderSuccess />} />
+          <Route element={<ProtectedRoute />}>
 
-        </Route>
-
-
-        <Route element={<AdminRoute />}>
-
-          <Route path="/admin" element={<AdminLayout />}>
-          
-            <Route index element={<Dashboard />} />
-            <Route path="admin-products" element={<AdminProducts />} />
-            <Route path="add-product" element={<AddProduct />} />
-            <Route path="categories" element={<Categories />} />
-            <Route path="orders" element={<Orders />} />
-            <Route path="users" element={<Users />} />
-            <Route path="profile" element={<Profile />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/order-success" element={<OrderSuccess />} />
 
           </Route>
 
-        </Route>
 
-      </Routes>
-    </BrowserRouter>
+          <Route element={<AdminRoute />}>
+
+            <Route path="/admin" element={<AdminLayout />}>
+
+              <Route index element={<Dashboard />} />
+              <Route path="admin-products" element={<AdminProducts />} />
+              <Route path="add-product" element={<AddProduct />} />
+              <Route path="categories" element={<Categories />} />
+              <Route path="orders" element={<Orders />} />
+              <Route path="users" element={<Users />} />
+              <Route path="profile" element={<Profile />} />
+
+            </Route>
+
+          </Route>
+
+        </Routes>
+      </BrowserRouter>
+
+    </>
   );
 }
 

@@ -107,7 +107,9 @@ const updatePassword = async (email, hashedPassword) => {
 
     const [result] = await pool.query(
         `UPDATE users
-         SET password = ?
+         SET password = ?,
+         reset_otp = NULL,
+         reset_otp_expiry = NULL
          WHERE email = ?`,
         [hashedPassword, email]
     );

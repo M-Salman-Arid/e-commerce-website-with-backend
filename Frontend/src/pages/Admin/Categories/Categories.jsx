@@ -4,17 +4,17 @@ import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import { getCategories, addCategories } from "../../../api/productAPI";
 import EditCategoryModal from "../../../components/EditModels/EditCategories";
 import DeleteCategoryModal from "../../../components/EditModels/DeleteCategory";
-
+import { toast } from "react-toastify";
+import Loader from "../../../components/Loader/Loader";
 
 const Categories = () => {
 
     const [categories, setCategories] = useState([]);
     const [categoryName, setCategoryName] = useState("");
+    const [loading, setloading] = useState(true);
 
     const [selectedCategory, setSelectedCategory] = useState(null);
-
     const [showEditModal, setShowEditModal] = useState(false);
-
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const fetchCategories = async () => {
@@ -25,10 +25,13 @@ const Categories = () => {
 
             setCategories(data.categories);
 
+
         } catch (error) {
 
             console.log(error);
 
+        } finally {
+            setloading(false)
         }
 
     };
@@ -49,6 +52,8 @@ const Categories = () => {
 
             await addCategories(categoryName.trim());
 
+            toast.success("Catagory Added successfully")
+
             await fetchCategories();
 
             setCategoryName("");
@@ -56,27 +61,15 @@ const Categories = () => {
         } catch (error) {
 
             console.log(error);
+            toast.error("Error Adding the Category!")
 
         }
 
     };
 
-    const openEditModal = (category) => {
-
-        setSelectedCategory(category);
-
-        setShowEditModal(true);
-
+    if (loading) {
+        return <Loader />
     }
-
-    const openDeleteModal = (category) => {
-
-        setSelectedCategory(category);
-
-        setShowDeleteModal(true);
-
-    };
-
 
     return (
 
@@ -164,14 +157,20 @@ const Categories = () => {
 
                                                 <button
                                                     className="edit-btn"
-                                                    onClick={() => openEditModal(category)}
+                                                    onClick={() => {
+                                                        setSelectedCategory(category);
+                                                        setShowEditModal(true);
+                                                    }}
                                                 >
                                                     <FaEdit />
                                                 </button>
 
                                                 <button
                                                     className="delete-btn"
-                                                    onClick={() => openDeleteModal(category)}
+                                                    onClick={() => {
+                                                        setSelectedCategory(category)
+                                                        setShowDeleteModal(true)
+                                                    }}
                                                 >
                                                     <FaTrash />
                                                 </button>
@@ -205,31 +204,21 @@ const Categories = () => {
                 </div>
 
             </div>
-            {
-                showEditModal && (
 
-                    <EditCategoryModal
+            <EditCategoryModal
+                isOpen={showEditModal}
+                onClose={() => { setShowEditModal(false) }}
+                category={selectedCategory}
+                onUpdate={fetchCategories}
+            />
 
-                        category={selectedCategory}
+            <DeleteCategoryModal
+                isOpen={showDeleteModal}
+                onClose={() => { setShowDeleteModal(false) }}
+                category={selectedCategory}
+                onDelete={fetchCategories}
+            />
 
-                        onClose={() => setShowEditModal(false)}
-
-                    />
-
-                )
-            }
-            {
-                showDeleteModal && (
-
-                    <DeleteCategoryModal
-
-                        category={selectedCategory}
-                        onClose={() => setShowDeleteModal(false)}
-
-                    />
-
-                )
-            }
         </div>
     );
 };

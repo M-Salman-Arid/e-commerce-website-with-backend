@@ -1,13 +1,8 @@
 import "./Dashboard.css";
-import {
-    FaBoxOpen,
-    FaUsers,
-    FaShoppingCart,
-    FaDollarSign,
-} from "react-icons/fa";
-
+import { FaBoxOpen, FaUsers, FaShoppingCart, FaDollarSign} from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { getDashboardData } from "../../../api/dashboardAPI";
+import Loader from "../../../components/Loader/Loader";
 
 const Dashboard = () => {
     
@@ -16,6 +11,7 @@ const Dashboard = () => {
     const [orders, setOrders] = useState(0);
     const [revenue, setRevenue] = useState(0);
 
+    const [loading, setloading] = useState(true)
 
     useEffect(() => {
         
@@ -29,12 +25,18 @@ const Dashboard = () => {
             }
             catch (error) {
                 console.error("Error fetching dashboard data:", error);
+            } finally {
+                setloading(false)
             }
         };
 
         fetchDashboardData();
 
     }, []);
+
+    if(loading) {
+        return <Loader/>
+    }
 
     return (
         <div className="dashboard">
@@ -99,72 +101,6 @@ const Dashboard = () => {
                     </div>
 
                 </div>
-
-            </div>
-
-            {/* Recent Orders */}
-
-            <div className="dashboard-table">
-
-                <div className="table-header">
-                    <h2>Recent Orders</h2>
-                </div>
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Customer</th>
-                            <th>Product</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        <tr>
-                            <td>#1001</td>
-                            <td>Ali</td>
-                            <td>MacBook Pro</td>
-                            <td>$1,499</td>
-                            <td>
-                                <span className="status completed">
-                                    Completed
-                                </span>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>#1002</td>
-                            <td>Ahmed</td>
-                            <td>Gaming Keyboard</td>
-                            <td>$120</td>
-                            <td>
-                                <span className="status pending">
-                                    Pending
-                                </span>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>#1003</td>
-                            <td>Salman</td>
-                            <td>Smart Watch</td>
-                            <td>$299</td>
-                            <td>
-                                <span className="status cancelled">
-                                    Cancelled
-                                </span>
-                            </td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
 
             </div>
 

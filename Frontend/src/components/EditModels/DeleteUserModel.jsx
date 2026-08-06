@@ -1,28 +1,30 @@
-import "./DeleteUserModel.css";
+import "./DeleteUserModel.css"
 import { deleteUserAPI } from "../../api/userAPI";
+import { toast } from "react-toastify";
 
-const DeleteUserModal = ({ user, onClose }) => {
+const DeleteUserModal = ({ isOpen, onClose, user, onDelete }) => {
 
     const handleDelete = async () => {
 
         try {
 
-            const result = await deleteUserAPI(user.id);
-
-            if (result.success) {
-                alert(result.message);
-                onClose();
-            }
+            await deleteUserAPI(user.id);
+            onDelete();
+            toast.success("User deleted Successfully.")
+            onClose();
 
         } catch (error) {
 
             console.log(error);
+            toast.error("Error Deleting User!.")
 
         }
 
     };
 
-    if (!user) return null;
+    if(!isOpen || !user) {
+        return null
+    }
 
     return (
 

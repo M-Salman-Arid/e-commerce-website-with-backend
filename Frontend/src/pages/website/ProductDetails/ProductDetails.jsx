@@ -6,6 +6,8 @@ import Navbar from "../../../components/Navbar/Navbar";
 import Footer from "../../../components/Footer/Footer";
 import "./ProductDetails.css";
 import { addToCartAPI } from "../../../api/cartAPI";
+import Loader from "../../../components/Loader/Loader";
+import { toast } from "react-toastify";
 
 
 const ProductDetails = () => {
@@ -41,14 +43,8 @@ const ProductDetails = () => {
 
     }, [id]);
 
-    if (loading) {
-        return (
-            <>
-                <Navbar />
-                <h2 className="loading">Loading Product...</h2>
-                <Footer />
-            </>
-        );
+    if(loading) {
+        return <Loader/>
     }
 
     if (!product) {
@@ -64,11 +60,11 @@ const ProductDetails = () => {
     const handleAddToCart = async () => {
         try {
             await addToCartAPI(product.id, 1);
-            alert("Product added to cart!");
+            toast.success("Product Added to Your Cart")
         }
         catch (error) {
             console.error("Error adding product to cart:", error);
-            alert("Failed to add product to cart.");
+            toast.error("Faied to add product to your cart!")
         }
     };
 

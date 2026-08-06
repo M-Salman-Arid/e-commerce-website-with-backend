@@ -1,12 +1,14 @@
+import "./Auth.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import "./Auth.css";
 import { registerUser } from "../../api/authAPI";
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Register = () => {
 
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -38,12 +40,7 @@ const Register = () => {
     setError("");
     setSuccess("");
 
-    if (
-      !formData.name ||
-      !formData.email ||
-      !formData.password ||
-      !formData.confirmPassword
-    ) {
+    if ( !formData.name || !formData.email || !formData.password || !formData.confirmPassword ) {
       setError("Please fill in all fields.");
       return;
     }
@@ -64,10 +61,7 @@ const Register = () => {
 
       setSuccess(data.message);
 
-      sessionStorage.setItem(
-        "verificationToken",
-        data.token
-      );
+      sessionStorage.setItem( "verificationToken", data.token );
 
       setTimeout(() => {
         navigate("/verify-otp", {
@@ -75,13 +69,10 @@ const Register = () => {
             email: formData.email
           }
         });
-      }, 2000);
+      }, 1000);
 
     } catch (error) {
-
-      setError(
-        error.response?.data?.message || "Something went wrong."
-      );
+      setError( error.response?.data?.message || "Something went wrong." );
     }
 
   };
@@ -155,7 +146,7 @@ const Register = () => {
                   setShowPassword(!showPassword)
                 }
               >
-                {showPassword ? "Hide" : "Show"}
+                {showPassword ? <FaEye /> : <FaEyeSlash />}
               </button>
 
             </div>
@@ -190,8 +181,8 @@ const Register = () => {
                 }
               >
                 {showConfirmPassword
-                  ? "Hide"
-                  : "Show"}
+                  ? <FaEye />
+                  : <FaEyeSlash />}
               </button>
 
             </div>

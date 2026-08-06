@@ -23,8 +23,11 @@ export const verifyPasswordResetOTP = (email, otp) => {
     return axiosInstance.post("/auth/verify-password-reset-otp", { email, otp });
 }
 
-export const resetPasswordAPI = (data) => {
-    return axiosInstance.post("/auth/reset-password", data);
+export const resetPasswordAPI = (email, newPassword) => {
+    return axiosInstance.post("/auth/reset-password", {
+        email,
+        newPassword,
+    });
 }
 
 

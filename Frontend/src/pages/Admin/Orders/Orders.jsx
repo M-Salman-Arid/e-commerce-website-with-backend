@@ -2,11 +2,13 @@ import "./Orders.css";
 import { FaEye, FaTrash } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { getOrders } from "../../../api/orderAPI";
+import Loader from "../../../components/Loader/Loader";
 
 
 const Orders = () => {
 
     const [orders, setOrders] = useState([]);
+    const [loading, setloading] = useState(true);
 
     useEffect(() => {
 
@@ -22,6 +24,8 @@ const Orders = () => {
 
                 console.error("Error fetching orders:", error);
 
+            } finally {
+                setloading(false)
             }
 
         };
@@ -29,6 +33,10 @@ const Orders = () => {
         fetchOrders();
 
     }, []);
+
+    if(loading) {
+        return <Loader />
+    }
 
     return (
         <div className="orders-page">

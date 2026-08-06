@@ -1,242 +1,561 @@
 import "./Checkout.css";
+
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
+import {
+    FaUser,
+    FaEnvelope,
+    FaPhone,
+    FaMapMarkerAlt,
+    FaCity,
+    FaMailBulk,
+    FaMoneyBillWave,
+    FaCreditCard,
+    FaUniversity,
+    FaWallet,
+    FaCheckCircle,
+    FaArrowLeft
+} from "react-icons/fa";
+
+import { toast } from "react-toastify";
+
 import { createOrder } from "../../../api/orderAPI";
 import { getProfileAPI } from "../../../api/userAPI";
 import { getCartItemsAPI } from "../../../api/cartAPI";
 
-import { useNavigate } from "react-router-dom";
+import Navbar from "../../../components/Navbar/Navbar"
+
 
 const Checkout = () => {
 
     const navigate = useNavigate();
 
     const [profile, setProfile] = useState({
+        id: "",
         name: "",
         email: "",
         phone: ""
     });
 
-    useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const data = await getProfileAPI();
-
-                setProfile({
-                    name: data.user.name,
-                    email: data.user.email,
-                    phone: data.user.phone || ""
-
-                });
-            } catch (error) {
-                console.error("Error fetching profile:", error);
-            }
-        };
-
-        fetchProfile();
-    }, []);
-
-
     const [cartItems, setCartItems] = useState([]);
 
-    const subtotal = cartItems.reduce(
-        (total, item) => total + item.price * item.quantity,
-        0
-    );
-
-    useEffect(() => {
-        const fetchCartItems = async () => {
-            try {
-                const items = await getCartItemsAPI();
-                setCartItems(items.data.cart ?? []);
-            } catch (error) {
-                console.error("Error fetching cart items:", error);
-            }
-        };
-
-        fetchCartItems();
-    }, []);
-
-    
     const [shippingInfo, setShippingInfo] = useState({
         shipping_address: "",
         city: "",
         postal_code: ""
     });
 
-    const handleChange = (e) => {
-        setShippingInfo({
-            ...shippingInfo,
-            [e.target.name]: e.target.value,
-        });
-    };
     const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
 
+    const subtotal = cartItems.reduce(
+        (total, item) =>
+            total + item.price * item.quantity,
+        0
+    );
+
+    useEffect(() => {
+
+        const fetchData = async () => {
+
+            try {
+
+                const profileData =
+                    await getProfileAPI();
+
+                setProfile({
+                    id: profileData.user.id,
+                    name: profileData.user.name,
+                    email: profileData.user.email,
+                    phone: profileData.user.phone || ""
+                });
+
+                const cartData =
+                    await getCartItemsAPI();
+
+                setCartItems(
+                    cartData.data.cart ?? []
+                );
+
+            } catch (error) {
+
+                console.log(error);
+
+                toast.error(
+                    "Unable to load checkout."
+                );
+
+            }
+
+        };
+
+        fetchData();
+
+    }, []);
+
+    const handleChange = (e) => {
+
+        const { name, value } = e.target;
+
+        setShippingInfo((prev) => ({
+            ...prev,
+            [name]: value
+        }));
+
+    };
+
     const handlePlaceOrder = async () => {
+
+        if (
+            !shippingInfo.shipping_address ||
+            !shippingInfo.city ||
+            !shippingInfo.postal_code
+        ) {
+
+            toast.error(
+                "Please fill all shipping details."
+            );
+
+            return;
+
+        }
+
         const orderData = {
+
             user_id: profile.id,
+
             items: cartItems.map((item) => ({
                 product_id: item.product_id,
                 quantity: item.quantity,
                 price: item.price
             })),
+
             total_amount: subtotal,
-            shipping_address: shippingInfo.shipping_address,
+
+            shipping_address:
+                shippingInfo.shipping_address,
+
             city: shippingInfo.city,
-            postal_code: shippingInfo.postal_code,
+
+            postal_code:
+                shippingInfo.postal_code,
+
             payment_method: paymentMethod
+
         };
 
         try {
+
             await createOrder(orderData);
-            alert("Order placed successfully!");
+
+            toast.success(
+                "Order placed successfully!"
+            );
+
             navigate("/order-success");
+
         } catch (error) {
-            console.error("Error placing order:", error);
+
+            console.log(error);
+
+            toast.error(
+                "Unable to place order."
+            );
+
         }
+
     };
 
     return (
 
-        <div className="checkout-page">
+        <>
+            <Navbar />
 
-            <h1>Checkout</h1>
 
-            <div className="checkout-container">
+            <div className="checkout-page">
+                <button
+                    className="back-btn"
+                    onClick={() => navigate(-1)}
+                >
+                    <FaArrowLeft />
+                    <span>Back</span>
+                </button>
 
-                {/* Shipping Information */}
+                <div className="checkout-header">
 
-                <div className="checkout-form">
+                    <h1>Checkout</h1>
 
-                    <h2>Shipping Information</h2>
-
-                    <input
-                        type="text"
-                        name="name"
-                        value={profile.name}
-                        placeholder="Full Name"
-                        readOnly
-                    />
-
-                    <input
-                        type="email"
-                        name="email"
-                        value={profile.email}
-                        readOnly
-                    />
-
-                    <input
-                        type="number"
-                        name="phone"
-                        value={profile.phone}
-                        placeholder="Phone Number"
-                        readOnly
-                    />
-
-                    <textarea
-                        name="shipping_address"
-                        placeholder="Complete Address"
-                        rows="4"
-                        onChange={handleChange}
-                        required
-                    />
-
-                    <input
-                        type="text"
-                        name="city"
-                        placeholder="City"
-                        onChange={handleChange}
-                        required
-                    />
-
-                    <input
-                        type="text"
-                        name="postal_code"
-                        placeholder="Postal Code"
-                        onChange={handleChange}
-                        required
-                    />
-
-                    <h3>Payment Method</h3>
-
-                    <label>
-
-                        <input
-                            type="radio"
-                            checked={paymentMethod === "Cash on Delivery"}
-                            onChange={() => setPaymentMethod("Cash on Delivery")}
-                        />
-
-                        Cash on Delivery
-
-                    </label>
-
-                    <label>
-
-                        <input
-                            type="radio"
-                            checked={paymentMethod === "Credit Card"}
-                            onChange={() => setPaymentMethod("Credit Card")}
-                        />
-
-                        Credit / Debit Card
-
-                    </label>
+                    <p>
+                        Complete your order securely
+                    </p>
 
                 </div>
 
-                {/* Order Summary */}
+                <div className="checkout-container">
 
-                <div className="checkout-summary">
+                    {/* LEFT SIDE */}
 
-                    <h2>Order Summary</h2>
+                    <div className="checkout-form">
 
-                    {cartItems.map((item) => (
+                        <div className="section-title">
 
-                        <div
-                            className="summary-item"
-                            key={item.id}
-                        >
+                            <FaMapMarkerAlt />
 
-                            <span>
-                                {item.title} × {item.quantity}
-                            </span>
-
-                            <span>
-                                Rs. {(item.price * item.quantity).toLocaleString()}
-                            </span>
+                            <h2>
+                                Shipping Information
+                            </h2>
 
                         </div>
 
-                    ))}
+                        <div className="input-group">
 
-                    <hr />
+                            <label>
 
-                    <div className="summary-item">
-                        <strong>Subtotal</strong>
-                        <strong>Rs. {subtotal.toLocaleString()}</strong>
+                                <FaUser />
+
+                                Full Name
+
+                            </label>
+
+                            <input
+                                type="text"
+                                value={profile.name}
+                                readOnly
+                            />
+
+                        </div>
+
+                        <div className="input-group">
+
+                            <label>
+
+                                <FaEnvelope />
+
+                                Email Address
+
+                            </label>
+
+                            <input
+                                type="email"
+                                value={profile.email}
+                                readOnly
+                            />
+
+                        </div>
+
+                        <div className="input-group">
+
+                            <label>
+
+                                <FaPhone />
+
+                                Phone Number
+
+                            </label>
+
+                            <input
+                                type="text"
+                                value={profile.phone}
+                                readOnly
+                            />
+
+                        </div>
+
+                        <div className="input-group">
+
+                            <label>
+
+                                <FaMapMarkerAlt />
+
+                                Complete Address
+
+                            </label>
+
+                            <textarea
+
+                                rows="4"
+
+                                name="shipping_address"
+
+                                value={
+                                    shippingInfo.shipping_address
+                                }
+
+                                onChange={handleChange}
+
+                                placeholder="House No, Street, Area"
+
+                            />
+
+                        </div>
+
+                        <div className="two-columns">
+
+                            <div className="input-group">
+
+                                <label>
+
+                                    <FaCity />
+
+                                    City
+
+                                </label>
+
+                                <input
+
+                                    type="text"
+
+                                    name="city"
+
+                                    value={
+                                        shippingInfo.city
+                                    }
+
+                                    onChange={handleChange}
+
+                                    placeholder="City"
+
+                                />
+
+                            </div>
+
+                            <div className="input-group">
+
+                                <label>
+
+                                    <FaMailBulk />
+
+                                    Postal Code
+
+                                </label>
+
+                                <input
+
+                                    type="text"
+
+                                    name="postal_code"
+
+                                    value={
+                                        shippingInfo.postal_code
+                                    }
+
+                                    onChange={handleChange}
+
+                                    placeholder="Postal Code"
+
+                                />
+
+                            </div>
+
+                        </div>
+
+                        <div className="section-title payment-title">
+                            <FaMoneyBillWave />
+                            <h2>Payment Method</h2>
+                        </div>
+
+                        <div className="payment-methods">
+
+                            <div
+                                className={`payment-card ${paymentMethod === "Cash on Delivery" ? "active-payment" : ""
+                                    }`}
+                                onClick={() => setPaymentMethod("Cash on Delivery")}
+                            >
+                                <FaMoneyBillWave className="payment-icon" />
+
+                                <div>
+                                    <h4>Cash on Delivery</h4>
+                                    <p>Pay when your order arrives.</p>
+                                </div>
+
+                                {paymentMethod === "Cash on Delivery" && (
+                                    <FaCheckCircle className="selected-icon" />
+                                )}
+                            </div>
+
+                            <div
+                                className={`payment-card ${paymentMethod === "Credit Card" ? "active-payment" : ""
+                                    }`}
+                                onClick={() => setPaymentMethod("Credit Card")}
+                            >
+                                <FaCreditCard className="payment-icon" />
+
+                                <div>
+                                    <h4>Credit / Debit Card</h4>
+                                    <p>Visa, MasterCard, PayPak</p>
+                                </div>
+
+                                {paymentMethod === "Credit Card" && (
+                                    <FaCheckCircle className="selected-icon" />
+                                )}
+                            </div>
+
+                            <div
+                                className={`payment-card ${paymentMethod === "Bank Transfer" ? "active-payment" : ""
+                                    }`}
+                                onClick={() => setPaymentMethod("Bank Transfer")}
+                            >
+                                <FaUniversity className="payment-icon" />
+
+                                <div>
+                                    <h4>Bank Transfer</h4>
+                                    <p>Direct bank payment.</p>
+                                </div>
+
+                                {paymentMethod === "Bank Transfer" && (
+                                    <FaCheckCircle className="selected-icon" />
+                                )}
+                            </div>
+
+                            <div
+                                className={`payment-card ${paymentMethod === "EasyPaisa / JazzCash"
+                                    ? "active-payment"
+                                    : ""
+                                    }`}
+                                onClick={() => setPaymentMethod("EasyPaisa / JazzCash")}
+                            >
+                                <FaWallet className="payment-icon" />
+
+                                <div>
+                                    <h4>EasyPaisa / JazzCash</h4>
+                                    <p>Pay instantly using mobile wallet.</p>
+                                </div>
+
+                                {paymentMethod === "EasyPaisa / JazzCash" && (
+                                    <FaCheckCircle className="selected-icon" />
+                                )}
+                            </div>
+
+                        </div>
                     </div>
 
-                    <div className="summary-item">
-                        <span>Shipping</span>
-                        <span>Free</span>
+                    {/* ==================== ORDER SUMMARY ==================== */}
+
+                    <div className="checkout-summary">
+
+                        <div className="summary-card">
+
+                            <div className="summary-header">
+
+                                <h2>Order Summary</h2>
+
+                                <span>{cartItems.length} Item(s)</span>
+
+                            </div>
+
+                            <div className="summary-products">
+
+                                {cartItems.map((item) => (
+
+                                    <div
+                                        className="summary-product"
+                                        key={item.id}
+                                    >
+
+                                        <div className="summary-product-left">
+
+                                            <img
+                                                src={`http://localhost:3000/api/products/image/${item.product_id}`}
+                                                alt={item.title}
+                                            />
+
+                                            <div>
+
+                                                <h4>{item.title}</h4>
+
+                                                <p>
+                                                    Qty: {item.quantity}
+                                                </p>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div className="summary-product-price">
+
+                                            Rs. {(item.price * item.quantity).toLocaleString()}
+
+                                        </div>
+
+                                    </div>
+
+                                ))}
+
+                            </div>
+
+                            <hr />
+
+                            <div className="summary-row">
+
+                                <span>Subtotal</span>
+
+                                <span>
+                                    Rs. {subtotal.toLocaleString()}
+                                </span>
+
+                            </div>
+
+                            <div className="summary-row">
+
+                                <span>Shipping</span>
+
+                                <span className="free-shipping">
+
+                                    Free
+
+                                </span>
+
+                            </div>
+
+                            <div className="summary-row">
+
+                                <span>Discount</span>
+
+                                <span>
+
+                                    Rs. 0
+
+                                </span>
+
+                            </div>
+
+                            <hr />
+
+                            <div className="summary-total">
+
+                                <span>Total</span>
+
+                                <span>
+
+                                    Rs. {subtotal.toLocaleString()}
+
+                                </span>
+
+                            </div>
+
+                            <button
+                                className="place-order-btn"
+                                onClick={handlePlaceOrder}
+                            >
+
+                                Place Order
+
+                            </button>
+
+                            <div className="secure-checkout">
+
+                                🔒 Secure Checkout
+
+                            </div>
+
+                        </div>
+
                     </div>
-
-                    <hr />
-
-                    <div className="summary-item total">
-                        <strong>Total</strong>
-                        <strong>Rs. {subtotal.toLocaleString()}</strong>
-                    </div>
-
-                    <button className="place-order-btn" onClick={handlePlaceOrder}>
-                        Place Order
-                    </button>
 
                 </div>
 
             </div>
-
-        </div>
+        </>
 
     );
 

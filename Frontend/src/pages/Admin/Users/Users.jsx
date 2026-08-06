@@ -1,67 +1,47 @@
 import "./Users.css";
+import { toast } from "react-toastify"
 import { FaEdit, FaTrash, FaUserShield } from "react-icons/fa";
 import { getAllUserAPI } from "../../../api/userAPI";
 import { useState, useEffect } from "react";
 import EditUserModal from "../../../components/EditModels/EditUserModel";
 import DeleteUserModal from "../../../components/EditModels/DeleteUserModel";
+import Loader from "../../../components/Loader/Loader";
 
 
 const Users = () => {
 
     const [users, setUsers] = useState([]);
+    const [loading, setloading] = useState(true)
 
     const [search, setSearch] = useState("");
 
     const [selectedUser, setSelectedUser] = useState(null);
-
     const [showEditModal, setShowEditModal] = useState(false);
-
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+    const fetchUsers = async () => {
+        try {
+            const data = await getAllUserAPI();
+            setUsers(data.users);
+        } catch (error) {
+            console.log(error);
+            toast.error("Error fetching Users!")
+        } finally {
+            setloading(false)
+        }
+    };
+
     useEffect(() => {
-
-        const fetchUsers = async () => {
-            try {
-                const data = await getAllUserAPI();
-                setUsers(data.users);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-
         fetchUsers();
+    }, [])
 
-    }, []);
 
     const filteredUsers = users.filter((user) =>
         user.name.toLowerCase().includes(search.toLowerCase())
     );
 
-    const openEditModal = (user) => {
-
-        setSelectedUser(user);
-        setShowEditModal(true);
-
-    }
-    const closeEditModal = () => {
-
-        setSelectedUser(null);
-        setShowEditModal(false);
-
-    }
-
-    const openDeleteModal = (user) => {
-
-        setSelectedUser(user);
-        setShowDeleteModal(true);
-
-    }
-
-    const closeDeleteModal = () => {
-
-        setSelectedUser(null);
-        setShowDeleteModal(false);
-
+    if (loading) {
+        return <Loader />
     }
 
     return (
@@ -141,7 +121,10 @@ const Users = () => {
 
                                         <button
                                             className="edit-btn"
-                                            onClick={() => openEditModal(user)}
+                                            onClick={() => {
+                                                setSelectedUser(user);
+                                                setShowEditModal(true);
+                                            }}
                                         >
                                             <FaEdit />
                                         </button>
@@ -152,38 +135,27 @@ const Users = () => {
 
                                         <button
                                             className="delete-btn"
-                                            onClick={() => openDeleteModal(user)}
+                                            onClick={() => {
+                                                setSelectedUser(user);
+                                                setShowDeleteModal(true);
+                                            }}
                                         >
                                             <FaTrash />
                                         </button>
 
-                                        {
-                                            showEditModal && (
+                                        <EditUserModal
+                                            isOpen={showEditModal}
+                                            onClose={() => { setShowEditModal(false) }}
+                                            user={selectedUser}
+                                            onUpdate={fetchUsers}
+                                        />
 
-                                                <EditUserModal
-
-                                                    user={selectedUser}
-
-                                                    onClose={closeEditModal}
-
-                                                />
-
-                                            )
-                                        }
-
-                                        {
-                                            showDeleteModal && (
-
-                                                <DeleteUserModal
-
-                                                    user={selectedUser}
-
-                                                    onClose={closeDeleteModal}
-
-                                                />
-
-                                            )
-                                        }
+                                        <DeleteUserModal
+                                            isOpen = {showDeleteModal}
+                                            onClose={() => {setShowDeleteModal(false)}}
+                                            user={selectedUser}
+                                            onDelete= {fetchUsers}
+                                        />
 
                                     </div>
 

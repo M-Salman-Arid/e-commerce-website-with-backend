@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./Products.css";
+import Loader from "../../../components/Loader/Loader"
 import { Link } from "react-router-dom";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import { getProducts, getCategories } from "../../../api/productAPI";
@@ -14,7 +15,6 @@ const Products = () => {
 
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
-
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const fetchProducts = async () => {
@@ -46,7 +46,7 @@ const Products = () => {
     }, []);
 
     if (loading) {
-        return <p>Loading products...</p>;
+        return <Loader/>;
     }
 
 

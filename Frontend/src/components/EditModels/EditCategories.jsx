@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import "./EditCategories.css";
 import { editCategoryAPI } from "../../api/productAPI";
+import { toast } from "react-toastify";
 
-const EditCategoryModal = ({ category, onClose }) => {
+const EditCategoryModal = ({ isOpen, onClose, category, onUpdate }) => {
 
     const [categoryName, setCategoryName] = useState("");
     const [description, setDescription] = useState("");
@@ -10,10 +11,8 @@ const EditCategoryModal = ({ category, onClose }) => {
     useEffect(() => {
 
         if (category) {
-
             setCategoryName(category.name || "");
             setDescription(category.description || "");
-
         }
 
     }, [category]);
@@ -28,20 +27,22 @@ const EditCategoryModal = ({ category, onClose }) => {
                 name: categoryName.trim(),
                 description: description.trim()
             });
-
-            alert("Category Updated Successfully")
-
+            onUpdate();
+            toast.success("Catagory Updated Sucessfully.")
             onClose();
 
         } catch (error) {
 
             console.log(error);
+            toast.error("Error Updating Catagory.")
 
         }
 
     };
 
-    if (!category) return null;
+    if (!isOpen || !category) {
+        return null;
+    }
 
     return (
 

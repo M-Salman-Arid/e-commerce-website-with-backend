@@ -290,7 +290,6 @@ const resetPassword = async (req, res) => {
     try {
 
         const { email, newPassword } = req.body;
-        console.log("Reset Password Request:", req.body);
 
         const hashedPassword = await bcrypt.hash(newPassword, 10);
 

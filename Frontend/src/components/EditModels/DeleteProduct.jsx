@@ -1,5 +1,6 @@
 import "./DeleteProduct.css";
 import { deleteProductAPI } from "../../api/productAPI";
+import { toast } from "react-toastify";
 
 const DeleteProductModal = ({ isOpen, onClose, product, onDelete }) => {
 
@@ -9,9 +10,11 @@ const DeleteProductModal = ({ isOpen, onClose, product, onDelete }) => {
         try {
             await deleteProductAPI(product.id);
             onDelete();
+            toast.success("Product Deleted Successfully.")
             onClose();
         } catch (error) {
             console.error("Error deleting product:", error);
+            toast.error("Error While deleting the product!.")
         }
     };
 

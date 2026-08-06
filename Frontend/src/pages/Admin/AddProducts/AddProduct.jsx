@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import "./AddProduct.css";
 import { addProductAPI, getCategories } from "../../../api/productAPI";
+import { toast } from "react-toastify";
+import Loader from "../../../components/Loader/Loader";
 
 const AddProduct = () => {
 
     const [categories, setCategories] = useState([]);
+    const [loading, setloading] = useState(true)
 
     useEffect(() => {
         fetchCategories();
@@ -16,6 +19,8 @@ const AddProduct = () => {
             setCategories(data.categories);
         } catch (error) {
             console.error(error);
+        } finally{
+            setloading(false)
         }
     };
 
@@ -64,8 +69,10 @@ const AddProduct = () => {
 
         try {
             const response = await addProductAPI(formData);
-            console.log("Product added successfully:", response.data);
-            // Reset form fields
+            
+            if(response.success) {
+                toast.success("Product Added Succesfully.")
+            }
             setProduct({
                 title: "",
                 description: "",
@@ -78,8 +85,13 @@ const AddProduct = () => {
             setPreview(null);
         } catch (error) {
             console.error("Error adding product:", error);
+            toast.error("Error Adding the product!")
         }
     };
+
+    if(loading) {
+        return <Loader />
+    }
 
     return (
         <div className="add-product-page">

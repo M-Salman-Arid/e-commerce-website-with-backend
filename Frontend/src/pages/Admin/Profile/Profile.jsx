@@ -1,10 +1,14 @@
 import "./Profile.css";
+import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { getProfileAPI, updateProfileAPI, changePasswordAPI} from "../../../api/userAPI";
+import Loader from "../../../components/Loader/Loader";
 
 const Profile = () => {
 
     const defaultProfileImage = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+
+    const [loading, setloading] = useState(true)
 
     const [image, setImage] = useState(null);
 
@@ -42,6 +46,8 @@ const Profile = () => {
 
             console.log(error);
 
+        } finally {
+            setloading(false)
         }
 
     };
@@ -89,16 +95,14 @@ const Profile = () => {
                 formData.append("profileImage", image);
             }
 
-            console.log("Form Data:", formData);
-
             const response = await updateProfileAPI(formData);
 
             if (response.success) {
-                alert("Profile updated successfully!");
+                toast.success("Profile Updated Successfully.")
                 await fetchProfile();
                 setImage(null);
             } else {
-                alert("Failed to update profile.");
+                toast.error("Failed to update profile.")
             }
 
         } catch (error) {
@@ -155,6 +159,10 @@ const Profile = () => {
         }
 
     };
+
+    if(loading) {
+        return <Loader />
+    }
 
 
     return (

@@ -1,14 +1,13 @@
 import Navbar from "../../../components/Navbar/Navbar";
 import Footer from "../../../components/Footer/Footer";
+import Loader from "../../../components/Loader/Loader";
 
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./Home.css";
 import { getCategories, getProducts } from "../../../api/productAPI";
 
-import {
-    FaShippingFast, FaLock, FaUndoAlt, FaHeadset
-} from "react-icons/fa";
+import { FaShippingFast, FaLock, FaUndoAlt, FaHeadset } from "react-icons/fa";
 import ProductCard from "../../../components/ProductCard/ProductCard";
 
 const features = [
@@ -75,7 +74,7 @@ const Home = () => {
     }, []);
 
     if (loading) {
-        return <h2>Loading...🤢</h2>;
+        return <Loader/>
     }
     return (
         <>

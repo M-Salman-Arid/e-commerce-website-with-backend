@@ -1,8 +1,9 @@
+import "./Auth.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import "./Auth.css";
 import { loginUser } from "../../api/authAPI"
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
 
@@ -15,6 +16,8 @@ const Login = () => {
 
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -43,10 +46,7 @@ const Login = () => {
 
             localStorage.setItem("token", data.token);
 
-            localStorage.setItem(
-                "user",
-                JSON.stringify(data.user)
-            );
+            localStorage.setItem("user", JSON.stringify(data.user));
 
             if (data.user.role === "admin") {
                 navigate("/admin");
@@ -64,7 +64,7 @@ const Login = () => {
 
         }
     };
-    
+
 
     return (
         <div className="auth-container">
@@ -97,18 +97,27 @@ const Login = () => {
                         />
                     </div>
 
-                    <div>
-                        <label>Password</label>
+                    <div className="password-field">
 
                         <input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             name="password"
-                            placeholder="Enter your password"
+                            placeholder="Enter Password"
                             value={formData.password}
                             onChange={handleChange}
                         />
-                    </div>
 
+                        <button
+                            type="button"
+                            className="toggle-password"
+                            onClick={() =>
+                                setShowPassword(!showPassword)
+                            }
+                        >
+                            {showPassword ? <FaEye /> : <FaEyeSlash />}
+                        </button>
+
+                    </div>
                     <div className="remember">
 
                         <label>

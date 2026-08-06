@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./EditProduct.css";
 import { updateProductAPI } from "../../api/productAPI";
+import { toast } from "react-toastify";
 
 const EditProductModal = ({ isOpen, onClose, product, categories, onUpdate }) => {
 
@@ -39,9 +40,11 @@ const EditProductModal = ({ isOpen, onClose, product, categories, onUpdate }) =>
         try {
             await updateProductAPI(product.id, formData);
             onUpdate();
+            toast.success("Product Updated Successfully.")
             onClose();
         } catch (error) {
             console.error(error);
+            toast.error("Error product Updating!")
         }
     };
 

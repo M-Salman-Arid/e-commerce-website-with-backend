@@ -1,16 +1,23 @@
 import "./Auth.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import Loader from "../../components/Loader/Loader";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 import { forgotPasswordAPI, verifyPasswordResetOTP, resetPasswordAPI } from "../../api/authAPI";
 
 const ForgotPassword = () => {
 
+  const navigate = useNavigate();
+
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -40,6 +47,9 @@ const ForgotPassword = () => {
 
     e.preventDefault();
 
+    setError("");
+    setSuccess("");
+
     try {
 
       setLoading(true);
@@ -47,7 +57,6 @@ const ForgotPassword = () => {
       await forgotPasswordAPI(email);
 
       setSuccess("OTP sent successfully.");
-
       setStep(2);
 
     } catch (err) {
@@ -59,12 +68,14 @@ const ForgotPassword = () => {
       setLoading(false);
 
     }
-
   };
 
   const handleVerifyOTP = async (e) => {
 
     e.preventDefault();
+
+    setError("");
+    setSuccess("");
 
     try {
 
@@ -73,7 +84,6 @@ const ForgotPassword = () => {
       await verifyPasswordResetOTP(email, otp);
 
       setSuccess("OTP Verified");
-
       setStep(3);
 
     } catch (err) {
@@ -85,12 +95,14 @@ const ForgotPassword = () => {
       setLoading(false);
 
     }
-
   };
 
   const handleResetPassword = async (e) => {
 
     e.preventDefault();
+
+    setError("");
+    setSuccess("");
 
     if (newPassword !== confirmPassword) {
 
@@ -104,7 +116,13 @@ const ForgotPassword = () => {
 
       await resetPasswordAPI(email, newPassword);
 
-      setSuccess("Password updated successfully");
+      setSuccess("Password updated successfully.");
+
+      setTimeout(() => {
+
+        navigate("/login")
+
+      }, 2000)
 
     } catch (err) {
 
@@ -115,12 +133,11 @@ const ForgotPassword = () => {
       setLoading(false);
 
     }
-
   };
 
   if (loading) {
 
-    return <div className="loading">Loading...</div>;
+    return <Loader />;
   }
 
   return (
@@ -141,17 +158,26 @@ const ForgotPassword = () => {
 
         {step === 1 && (
 
-          <form onSubmit={handleSendOTP}>
+          <form onSubmit={handleSendOTP} className="auth-form">
 
-            <label>Email</label>
+            <div>
+              <label>Email</label>
 
-            <input
-              type="email"
-              value={email}
-              onChange={handleEmailChange}
-            />
+              <input
+                type="email"
+                name="email"
+                value={email}
+                onChange={handleEmailChange}
+                placeholder="Enter your registered email"
+              />
 
-            <button type="submit">
+            </div>
+
+
+            <button
+              type="submit"
+              className="auth-btn"
+            >
               Send OTP
             </button>
 
@@ -161,23 +187,35 @@ const ForgotPassword = () => {
 
         {step === 2 && (
 
-          <form onSubmit={handleVerifyOTP}>
+          <form onSubmit={handleVerifyOTP} className="auth-form">
 
-            <label>Email</label>
+            <div>
+              <label>Email</label>
 
-            <input
-              value={email}
-              readOnly
-            />
+              <input
+                value={email}
+                readOnly
+              />
 
-            <label>OTP</label>
 
-            <input
-              value={otp}
-              onChange={handleOtpChange}
-            />
+            </div>
 
-            <button>
+            <div>
+
+              <label>OTP</label>
+
+              <input
+                value={otp}
+                type="number"
+                onChange={handleOtpChange}
+                placeholder="Enter the OTP sent to your email"
+                name="otp"
+              />
+
+            </div>
+
+
+            <button className="auth-btn">
               Verify OTP
             </button>
 
@@ -187,25 +225,61 @@ const ForgotPassword = () => {
 
         {step === 3 && (
 
-          <form onSubmit={handleResetPassword}>
+          <form onSubmit={handleResetPassword} className="auth-form">
 
-            <label>New Password</label>
+            <div>
 
-            <input
-              type="password"
-              value={newPassword}
-              onChange={handleNewPasswordChange}
-            />
+              <label>New Password</label>
 
-            <label>Confirm Password</label>
+              <div className="password-field">
 
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={handleConfirmPasswordChange}
-            />
+                <input
+                  type={showNewPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="Create password"
+                  value={newPassword}
+                  onChange={handleNewPasswordChange}
+                />
 
-            <button>
+                <button
+                  type="button"
+                  className="toggle-password"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                >
+                  {showNewPassword ? <FaEye /> : <FaEyeSlash />}
+                </button>
+
+              </div>
+
+            </div>
+
+            <div>
+
+              <label>Confirm Password</label>
+
+              <div className="password-field">
+
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  placeholder="Confirm your password"
+                  value={confirmPassword}
+                  onChange={handleConfirmPasswordChange}
+                />
+
+                <button
+                  type="button"
+                  className="toggle-password"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
+                </button>
+
+              </div>
+
+            </div>
+
+            <button className="auth-btn">
               Update Password
             </button>
 

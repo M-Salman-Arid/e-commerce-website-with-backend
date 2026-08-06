@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import "./EditUserModel.css";
 import { updateUserAPI } from "../../api/userAPI";
+import { toast } from "react-toastify";
 
-const EditUserModal = ({ user, onClose }) => {
+const EditUserModal = ({ isOpen, onClose, user, onUpdate}) => {
 
     const [formData, setFormData] = useState({
         role: "",
@@ -37,25 +38,19 @@ const EditUserModal = ({ user, onClose }) => {
 
         try {
 
-            await updateUserAPI(user.id, {
-                role: formData.role,
-                status: formData.status
-            });
-
-            const response = await updateUserAPI(user.id, formData);
-
-            if (response.success) {
-                alert(response.message);
-                onClose();
-            }
+            await updateUserAPI(user.id, formData);
+            onUpdate();
+            toast.success("User Updated Sucessfully.")
+            onClose();
 
         } catch (error) {
             console.log(error);
+            toast.error("Error updating User!")
         }
 
     };
 
-    if (!user) return null;
+    if (!isOpen) return null;
 
     return (
 
